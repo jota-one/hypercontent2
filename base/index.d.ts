@@ -1,6 +1,32 @@
 namespace hc {
   namespace content {
-    export type LangCode = 'fr' | 'de' | 'en' | 'it' | 'es' | 'pt'
+    // ISO 639-1 2 letters language codes
+    export type LangCode = 'aa' | 'ab' | 'ac' | 'ad' | 'ae' | 'af' | 'ag' | 'ah' | 'ai' | 'aj' | 'ak' | 'al' | 'am' | 'an' | 'ao' | 'ap' | 'aq' | 'ar' | 'as' | 'at' | 'au' | 'av' | 'aw' | 'ax' | 'ay' | 'az'
+    'ba' | 'bb' | 'bc' | 'bd' | 'be' | 'bf' | 'bg' | 'bh' | 'bi' | 'bj' | 'bk' | 'bl' | 'bm' | 'bn' | 'bo' | 'bp' | 'bq' | 'br' | 'bs' | 'bt' | 'bu' | 'bv' | 'bw' | 'bx' | 'by' | 'bz' | 
+    'ca' | 'cb' | 'cc' | 'cd' | 'ce' | 'cf' | 'cg' | 'ch' | 'ci' | 'cj' | 'ck' | 'cl' | 'cm' | 'cn' | 'co' | 'cp' | 'cq' | 'cr' | 'cs' | 'ct' | 'cu' | 'cv' | 'cw' | 'cx' | 'cy' | 'cz' | 
+    'da' | 'db' | 'dc' | 'dd' | 'de' | 'df' | 'dg' | 'dh' | 'di' | 'dj' | 'dk' | 'dl' | 'dm' | 'dn' | 'do' | 'dp' | 'dq' | 'dr' | 'ds' | 'dt' | 'du' | 'dv' | 'dw' | 'dx' | 'dy' | 'dz' | 
+    'ea' | 'eb' | 'ec' | 'ed' | 'ee' | 'ef' | 'eg' | 'eh' | 'ei' | 'ej' | 'ek' | 'el' | 'em' | 'en' | 'eo' | 'ep' | 'eq' | 'er' | 'es' | 'et' | 'eu' | 'ev' | 'ew' | 'ex' | 'ey' | 'ez' | 
+    'fa' | 'fb' | 'fc' | 'fd' | 'fe' | 'ff' | 'fg' | 'fh' | 'fi' | 'fj' | 'fk' | 'fl' | 'fm' | 'fn' | 'fo' | 'fp' | 'fq' | 'fr' | 'fs' | 'ft' | 'fu' | 'fv' | 'fw' | 'fx' | 'fy' | 'fz' | 
+    'ga' | 'gb' | 'gc' | 'gd' | 'ge' | 'gf' | 'gg' | 'gh' | 'gi' | 'gj' | 'gk' | 'gl' | 'gm' | 'gn' | 'go' | 'gp' | 'gq' | 'gr' | 'gs' | 'gt' | 'gu' | 'gv' | 'gw' | 'gx' | 'gy' | 'gz' | 
+    'ha' | 'hb' | 'hc' | 'hd' | 'he' | 'hf' | 'hg' | 'hh' | 'hi' | 'hj' | 'hk' | 'hl' | 'hm' | 'hn' | 'ho' | 'hp' | 'hq' | 'hr' | 'hs' | 'ht' | 'hu' | 'hv' | 'hw' | 'hx' | 'hy' | 'hz' | 
+    'ia' | 'ib' | 'ic' | 'id' | 'ie' | 'if' | 'ig' | 'ih' | 'ii' | 'ij' | 'ik' | 'il' | 'im' | 'in' | 'io' | 'ip' | 'iq' | 'ir' | 'is' | 'it' | 'iu' | 'iv' | 'iw' | 'ix' | 'iy' | 'iz' | 
+    'ja' | 'jb' | 'jc' | 'jd' | 'je' | 'jf' | 'jg' | 'jh' | 'ji' | 'jj' | 'jk' | 'jl' | 'jm' | 'jn' | 'jo' | 'jp' | 'jq' | 'jr' | 'js' | 'jt' | 'ju' | 'jv' | 'jw' | 'jx' | 'jy' | 'jz' | 
+    'ka' | 'kb' | 'kc' | 'kd' | 'ke' | 'kf' | 'kg' | 'kh' | 'ki' | 'kj' | 'kk' | 'kl' | 'km' | 'kn' | 'ko' | 'kp' | 'kq' | 'kr' | 'ks' | 'kt' | 'ku' | 'kv' | 'kw' | 'kx' | 'ky' | 'kz' | 
+    'la' | 'lb' | 'lc' | 'ld' | 'le' | 'lf' | 'lg' | 'lh' | 'li' | 'lj' | 'lk' | 'll' | 'lm' | 'ln' | 'lo' | 'lp' | 'lq' | 'lr' | 'ls' | 'lt' | 'lu' | 'lv' | 'lw' | 'lx' | 'ly' | 'lz' | 
+    'ma' | 'mb' | 'mc' | 'md' | 'me' | 'mf' | 'mg' | 'mh' | 'mi' | 'mj' | 'mk' | 'ml' | 'mm' | 'mn' | 'mo' | 'mp' | 'mq' | 'mr' | 'ms' | 'mt' | 'mu' | 'mv' | 'mw' | 'mx' | 'my' | 'mz' | 
+    'na' | 'nb' | 'nc' | 'nd' | 'ne' | 'nf' | 'ng' | 'nh' | 'ni' | 'nj' | 'nk' | 'nl' | 'nm' | 'nn' | 'no' | 'np' | 'nq' | 'nr' | 'ns' | 'nt' | 'nu' | 'nv' | 'nw' | 'nx' | 'ny' | 'nz' | 
+    'oa' | 'ob' | 'oc' | 'od' | 'oe' | 'of' | 'og' | 'oh' | 'oi' | 'oj' | 'ok' | 'ol' | 'om' | 'on' | 'oo' | 'op' | 'oq' | 'or' | 'os' | 'ot' | 'ou' | 'ov' | 'ow' | 'ox' | 'oy' | 'oz' | 
+    'pa' | 'pb' | 'pc' | 'pd' | 'pe' | 'pf' | 'pg' | 'ph' | 'pi' | 'pj' | 'pk' | 'pl' | 'pm' | 'pn' | 'po' | 'pp' | 'pq' | 'pr' | 'ps' | 'pt' | 'pu' | 'pv' | 'pw' | 'px' | 'py' | 'pz' | 
+    'qa' | 'qb' | 'qc' | 'qd' | 'qe' | 'qf' | 'qg' | 'qh' | 'qi' | 'qj' | 'qk' | 'ql' | 'qm' | 'qn' | 'qo' | 'qp' | 'qq' | 'qr' | 'qs' | 'qt' | 'qu' | 'qv' | 'qw' | 'qx' | 'qy' | 'qz' | 
+    'ra' | 'rb' | 'rc' | 'rd' | 're' | 'rf' | 'rg' | 'rh' | 'ri' | 'rj' | 'rk' | 'rl' | 'rm' | 'rn' | 'ro' | 'rp' | 'rq' | 'rr' | 'rs' | 'rt' | 'ru' | 'rv' | 'rw' | 'rx' | 'ry' | 'rz' | 
+    'sa' | 'sb' | 'sc' | 'sd' | 'se' | 'sf' | 'sg' | 'sh' | 'si' | 'sj' | 'sk' | 'sl' | 'sm' | 'sn' | 'so' | 'sp' | 'sq' | 'sr' | 'ss' | 'st' | 'su' | 'sv' | 'sw' | 'sx' | 'sy' | 'sz' | 
+    'ta' | 'tb' | 'tc' | 'td' | 'te' | 'tf' | 'tg' | 'th' | 'ti' | 'tj' | 'tk' | 'tl' | 'tm' | 'tn' | 'to' | 'tp' | 'tq' | 'tr' | 'ts' | 'tt' | 'tu' | 'tv' | 'tw' | 'tx' | 'ty' | 'tz' | 
+    'ua' | 'ub' | 'uc' | 'ud' | 'ue' | 'uf' | 'ug' | 'uh' | 'ui' | 'uj' | 'uk' | 'ul' | 'um' | 'un' | 'uo' | 'up' | 'uq' | 'ur' | 'us' | 'ut' | 'uu' | 'uv' | 'uw' | 'ux' | 'uy' | 'uz' | 
+    'va' | 'vb' | 'vc' | 'vd' | 've' | 'vf' | 'vg' | 'vh' | 'vi' | 'vj' | 'vk' | 'vl' | 'vm' | 'vn' | 'vo' | 'vp' | 'vq' | 'vr' | 'vs' | 'vt' | 'vu' | 'vv' | 'vw' | 'vx' | 'vy' | 'vz' | 
+    'wa' | 'wb' | 'wc' | 'wd' | 'we' | 'wf' | 'wg' | 'wh' | 'wi' | 'wj' | 'wk' | 'wl' | 'wm' | 'wn' | 'wo' | 'wp' | 'wq' | 'wr' | 'ws' | 'wt' | 'wu' | 'wv' | 'ww' | 'wx' | 'wy' | 'wz' | 
+    'xa' | 'xb' | 'xc' | 'xd' | 'xe' | 'xf' | 'xg' | 'xh' | 'xi' | 'xj' | 'xk' | 'xl' | 'xm' | 'xn' | 'xo' | 'xp' | 'xq' | 'xr' | 'xs' | 'xt' | 'xu' | 'xv' | 'xw' | 'xx' | 'xy' | 'xz' | 
+    'ya' | 'yb' | 'yc' | 'yd' | 'ye' | 'yf' | 'yg' | 'yh' | 'yi' | 'yj' | 'yk' | 'yl' | 'ym' | 'yn' | 'yo' | 'yp' | 'yq' | 'yr' | 'ys' | 'yt' | 'yu' | 'yv' | 'yw' | 'yx' | 'yy' | 'yz' | 
+    'za' | 'zb' | 'zc' | 'zd' | 'ze' | 'zf' | 'zg' | 'zh' | 'zi' | 'zj' | 'zk' | 'zl' | 'zm' | 'zn' | 'zo' | 'zp' | 'zq' | 'zr' | 'zs' | 'zt' | 'zu' | 'zv' | 'zw' | 'zx' | 'zy' | 'zz'
 
     export interface Lang {
       id: number
@@ -12,214 +38,3 @@ namespace hc {
     }
   }
 }
-
-/*
-export type BlockSpaceSize = 'full' | 'half' | 'quarter'
-export type Coords = [number, number]
-export interface CenterCoords {
-  lat: number
-  lng: number
-}
-
-export interface DateRange {
-  from: Dayjs
-  to: Dayjs
-}
-
-export interface Link {
-  label: string
-  href: string
-}
-
-export interface Marker {
-  coords: Coords
-  icon: string
-  label: string
-  slug?: string
-}
-
-export type ColorTheme =
-  | 'error'
-  | 'info'
-  | 'warning'
-  | 'success'
-  | 'neutral'
-  | 'subscribed'
-
-export type I18nField = Record<LangCode, string>
-
-export type ShowPage = 'always' | 'active' | 'never'
-
-export interface Page {
-  id: number
-  name: string
-  label: string
-  sort: number
-  show: ShowPage
-  access: string
-  lang: string
-  path: string
-  resolveSlug?: string
-}
-
-export interface Tag {
-  id: number
-  label: string
-}
-
-export interface Teaser {
-  tags?: Tag[]
-  content?: string
-  link?: Link
-}
-
-export type Sponsor = {
-  id: number
-  name: string
-  title?: string
-  isGlobal: boolean
-  bgColor?: string
-}
-
-export type SponsorWithDetail = Sponsor & {
-  content: any[]
-  link?: Link
-}
-
-export interface City {
-  id: number
-  label: string
-  coords: Coords
-  slug: string
-  sponsors: number[]
-}
-
-export interface SessionLocation {
-  label: string
-  coords: Coords
-  address: string
-}
-
-export interface SessionSubscriptions {
-  starting?: Date
-  max: number
-  currentCount: number
-  staffCount: number
-}
-
-export type SessionAttendeesStatus = 'todo' | 'checked' | 'disabled'
-
-export interface Session {
-  id: number
-  title: string
-  location: SessionLocation
-  cityId: number
-  start: Date
-  end?: Date
-  subscriptions: SessionSubscriptions
-  tags: Tag[]
-  moreInfo?: string
-  paused: string | null
-  cancelled: string | null
-  attendees: SessionAttendeesStatus
-}
-
-export type DateRangeSize = 'day' | 'week' | 'month' | 'year'
-
-export interface CaptchaModel {
-  verified: boolean
-  expired: boolean
-  token: string
-  eKey: string
-  error: string
-  isValid: boolean
-}
-
-export interface Person {
-  firstName: string
-  lastName: string
-  street: string
-  zip?: number
-  city: string
-  phone: string
-  email: string
-  title?: string
-}
-
-export interface Attendee {
-  subscriptionId: number
-  presence: boolean | null
-  firstName: string
-  lastName: string
-  gender: 'male' | 'female' | 'other'
-}
-
-export type UserProfileLogin = {
-  email: string
-  password?: string
-  passwordConfirm?: string
-}
-
-export type UserProfileDetails = {
-  firstName: string
-  lastName: string
-  street: string
-  zip?: number
-  city: string
-  regionId?: number
-  country?: string
-  phone?: string
-  gender: string
-  birthdate: string
-  size?: number
-  weight?: number
-  emergencyContact?: string
-}
-
-export type UserProfileHealth = {
-  heartIssues: boolean
-  chestPains: boolean
-  pastChestPains: boolean
-  balanceIssues: boolean
-  boneProblemsOn: boolean
-  boneProblemsDetails: string
-  bloodMedicationOn: boolean
-  bloodMedicationDetails: string
-  otherHealthIssuesOn: boolean
-  otherHealthIssuesDetails: string
-  objectives: string
-}
-
-export type UserProfileAgreements = {
-  risks?: boolean
-  promo?: boolean
-  ad?: boolean
-}
-
-export type UserProfile = UserProfileLogin &
-  UserProfileDetails &
-  UserProfileHealth &
-  UserProfileAgreements & {
-    id: number
-  }
-
-export interface EventType {
-  id?: number
-  xid: string
-  label: I18nField
-}
-
-export interface EventsImportResponse {
-  nbEvents: number
-  inserted: Array<number>
-  duplicates: Array<number>
-}
-
-export interface HateoasLinkDef {
-  href: string
-}
-export interface HateoasResource {
-  id: number
-  _links: Record<string, HateoasLinkDef>
-}
-*/
