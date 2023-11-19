@@ -6,6 +6,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  documentDriven: false
+  documentDriven: false,
+  layout: 'hc-admin',
 })
 </script>
