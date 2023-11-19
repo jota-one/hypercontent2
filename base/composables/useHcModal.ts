@@ -8,7 +8,7 @@ interface Modals {
 }
 
 export default function() {
-  const modalParams = useState('modalParmas', () => ref<any>({}))
+  const modalParams = useState('modalParams', () => ref<any>({}))
   const modals = useState('modals', () => ref<Modals>({}))
 
   const registerModal = (id: string) => {

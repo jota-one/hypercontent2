@@ -1,4 +1,4 @@
-import { LangCode } from '~'
+import type { LangCode } from '../index'
 
 export interface Lang {
   id: number
@@ -21,22 +21,24 @@ export default function() {
         .findOne()
     )
     
-    langs.value = _langs.value?.body
+    if (_langs.value) {
+      langs.value = _langs.value?.body as unknown as Lang[]
+    }
 
-    const defaultLangItem = langs.value.find(l => l.isDefault)
+    const defaultLangItem = langs.value.find((lang: Lang) => lang.isDefault)
 
     if (defaultLangItem) {
       defaultLang.value = defaultLangItem
     }
   }
 
-  const langCodes = computed(() => langs.value.map(l => l.code))
+  const langCodes = computed(() => langs.value.map((lang: Lang) => lang.code))
 
   const currentLangCode = computed<LangCode>(() => route.path.split('/')[1] as LangCode)
 
   const currentLang = computed(() => {
     return (
-      langs.value.find(l => l.code === currentLangCode.value) ||
+      langs.value.find((lang: Lang) => lang.code === currentLangCode.value) ||
       defaultLang.value
     )
   })
