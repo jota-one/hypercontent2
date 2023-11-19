@@ -1,0 +1,2 @@
+- [Home](/en)
+- [Contact](/en/contact)
