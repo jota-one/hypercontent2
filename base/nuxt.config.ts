@@ -14,36 +14,34 @@ export default defineNuxtConfig({
     }
   },
 
-  // content: {
-  //   documentDriven: {
-  //     // Will fetch navigation, page and surround.
-  //     navigation: true,
-  //     page: true,
-  //     surround: true,
-  //     // Will fetch `content/_theme.yml` and put it in `globals.theme` if present.
-  //     // globals: {
-  //     //   theme: {
-  //     //     where: {
-  //     //       _id: 'content:_theme.yml'
-  //     //     },
-  //     //     without: ['_']
-  //     //   }
-  //     // },
-  //     // Will use `theme` global to search for a fallback `layout` key.
-  //     // layoutFallbacks: ['theme'],
-  //     // Will inject `[...slug].vue` as the root page.
-  //     injectPage: false
-  //   }
-  // },
+  content: {
+    api: {
+      baseURL: '/_content',
+    }
+  },
 
-  // experimental: {
-  //   inlineSSRStyles: false
-  // },
+  experimental: {
+    inlineSSRStyles: false
+  },
 
   modules: [
     '@nuxtjs/plausible',
     '@nuxtjs/tailwindcss',
     '@nuxt/content',
     join(currentDir, 'modules/hypercontent')
-  ]
+  ],
+
+  tailwindcss: {
+    config: {
+      corePlugins: {
+        preflight: false,
+      },
+    },
+  },
+
+  vite: {
+    optimizeDeps: {
+      include: ['@editorjs/editorjs'],
+    },
+  },
 })
