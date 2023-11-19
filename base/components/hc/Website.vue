@@ -5,13 +5,18 @@
 </template>
 
 <script setup lang="ts">
+const route = useRoute()
 const ready = ref(false)
 
-const { _loadLangs } = useHcLangs()
-const { _loadLabels, labels } = useHcLabels()
+if (route.path === '/' || route.path === '/admin') {
+  ready.value = true
+} else {
+  const { _loadLangs } = useHcLangs()
+  const { _loadLabels } = useHcLabels()
 
-await _loadLangs()
-await _loadLabels()
+  await _loadLangs()
+  await _loadLabels()
 
-ready.value = true
+  ready.value = true
+}
 </script>
