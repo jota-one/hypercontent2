@@ -1,8 +1,9 @@
 import { mkdir, rm, writeFile } from 'fs/promises'
 import { join } from 'path'
 
-import { HC_ENDPOINTS } from './config'
-import { get } from './helpers.js'
+import { HC_ENDPOINTS, type ContentApiEndpointDef } from './config'
+import { get } from './helpers'
+import type { Page, PageContents, Lang } from '../../index'
 
 interface Config {
   apiBasePath: string[]
@@ -198,10 +199,14 @@ const buildPages = async (navigation: Page[], lang: Lang) => {
 
 const generateContent = async ({
   apiUrl,
-  contentRoot
+  contentRoot,
+  excludeLabelKeyPrefixes,
+  customContentApiEndpoints,
 } : {
   apiUrl: string
   contentRoot?: string
+  excludeLabelKeyPrefixes?: string[]
+  customContentApiEndpoints?: Record<string, ContentApiEndpointDef>
 }) => {
   // Set api url
   config.apiBaseUrl = apiUrl
@@ -210,6 +215,9 @@ const generateContent = async ({
   if (contentRoot) {
     config.contentBasePath = [contentRoot]
   }
+
+  // Set default excluded label keys
+  const _excludeLabelKeyPrefixes = ['hc_', ...(excludeLabelKeyPrefixes || [])]
 
   console.log(`Generating content from ${apiUrl} into "${join(...config.contentBasePath)}"...`)
 
@@ -231,7 +239,16 @@ const generateContent = async ({
     const { json: labels } = await fetchEndpoint(
       resolvePlaceholders(HC_ENDPOINTS.labels.path, { lang }),
     )
-    await dumpJson(labels, join(...config.apiBasePath.concat([lang.code, 'labels'])))
+
+    const filteredLabels = Object.entries(labels)
+        .reduce((acc: any, [key, value])  => {
+          if (!_excludeLabelKeyPrefixes.some(prefix => key.startsWith(prefix))) {
+            acc[key] = value
+          }
+          return acc
+        }, {})
+    
+      await dumpJson(filteredLabels, join(...config.apiBasePath.concat([lang.code, 'labels'])))
 
     // Navigation
     const { json: navigation } = await fetchEndpoint(

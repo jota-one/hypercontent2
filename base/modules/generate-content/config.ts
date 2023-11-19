@@ -1,3 +1,8 @@
+export interface ContentApiEndpointDef {
+  path: string
+  queryParams?: Record<string, string>
+}
+
 export const HC_ENDPOINTS = {
   langs: { path: '/settings' },
   labels: { path: '/labels/{lang.code}' },
@@ -14,17 +19,3 @@ export const HC_ENDPOINTS = {
     queryParams: { lang_id: '{lang.id}' },
   },
 }
-
-export const SISI_ENDPOINTS = {
-  cities: {
-    path: '/cities',
-    queryParams: { lang_id: '{lang.id}' },
-  },
-}
-
-export const CUSTOM_ENDPOINTS = [
-  {
-    path: '/sponsors',
-    queryParams: { lang_id: '{lang.id}' },
-  },
-]
