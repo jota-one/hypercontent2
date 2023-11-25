@@ -1,3 +1,3 @@
 # Hypercontent
 
-**Nuxt and PocketBase** based CMS
+**Nuxt and PocketBase** based CMS.
