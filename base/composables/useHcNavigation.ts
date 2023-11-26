@@ -1,6 +1,4 @@
-import type { Page } from '~'
-
-export type ShowPage = 'always' | 'active' | 'never'
+import type { Page } from '../index'
 
 export interface Pages {
   [id: string]: Page
@@ -16,37 +14,41 @@ type NavigationItem = {
 }
 
 export default function() {
-  const { api } = useRuntimeConfig().public
+  const { hc } = useRuntimeConfig().public
   const route = useRoute()
-  const { currentLang } = useHcLangs()
+  const { currentLangCode, defaultLang } = useHcLangs()
 
   const homePage = useState('homePage', () => ref<NavigationItem | null>(null))
   const navigation = useState('navigation', () => ref<NavigationItem[]>([]))
   const pages = useState('pages', () => ref<Pages>({}))
 
-  const loadNavigation = async (langId?: number) => {
-    if (!langId && Object.keys(pages.value).length) {
-      return
-    }
+  const _loadNavigation = async () => {
+    const langCode = currentLangCode.value || defaultLang.value?.code || 'en'
+    const hcApiPath = `${hc.content.api.base}${hc.content.api.navigation.replace('__langCode__', langCode)}`
 
-    const { data: pageList } = await useFetch<Page[]>(
-      `${api.prefix}/navigation?lang_id=${langId || currentLang.value?.id}`,
+    const { data: _pageList } = await useAsyncData(
+      '_navigation',
+      () => queryContent()
+        .where({ _partial: true, _id: `content:${hcApiPath}` })
+        .findOne()
     )
 
-    if (!pageList.value) {
+    if (!_pageList.value) {
       navigation.value = []
       pages.value = {}
       return
     }
 
+    const pageList = _pageList.value?.body as unknown as Page[]
+
     // Set homepasge
     homePage.value = {
-      ...pageList.value[0],
-      pageId: pageList.value[0].id,
+      ...pageList[0],
+      pageId: pageList[0].id,
     }
 
     // Build pages
-    for (const page of pageList.value) {
+    for (const page of pageList) {
       pages.value[page.id] = page
     }
 
@@ -68,9 +70,9 @@ export default function() {
 
     // Backend returns a flat list of pages ordered by path,
     // so we can avoid recursive looping.
-    for (let index = 1; index < pageList.value.length; index++) {
-      const page = pageList.value[index]
-      const next = index < pageList.value.length && pageList.value[index + 1]
+    for (let index = 1; index < pageList.length; index++) {
+      const page = pageList[index]
+      const next = index < pageList.length && pageList[index + 1]
 
       if (isFirstLevel(page)) {
         parent = null
@@ -81,20 +83,41 @@ export default function() {
           parent.children = []
         }
 
-        parent.children.push({ ...page, pageId: page.id })
+        parent.children.push({
+          pageId: page.id,
+          path: page.path,
+          label: page.label,
+          sort: page.sort,
+          show: page.show
+        })
       } else {
-        _navigation.push({ ...page, pageId: page.id })
+        _navigation.push({
+          pageId: page.id,
+          path: page.path,
+          label: page.label,
+          sort: page.sort,
+          show: page.show
+        })
       }
 
       if (next && hasChild(page, next)) {
-        parent = { ...page, pageId: page.id }
+        parent = {
+          pageId: page.id,
+          path: page.path,
+          label: page.label,
+          sort: page.sort,
+          show: page.show
+        }
+        
+        const parentIndex = _navigation.findIndex(n => n.pageId === parent?.pageId)
+        _navigation[parentIndex] = parent
       }
     }
 
     navigation.value = _navigation
   }
 
-  const getPage = (path: string) => {
+  const getPageByPath = (path: string) => {
     const stripTrailingSlash = (path: string) => path.replace(/(.*)\/$/, '$1')
 
     return Object.values(pages.value).find(
@@ -102,8 +125,14 @@ export default function() {
     )
   }
 
+  const getPageByName = (name: string) => {
+    return Object.values(pages.value).find(
+      page => page.name === name
+    )
+  }
+
   const currentPage = computed(() => {
-    const staticPage = getPage(route.path)
+    const staticPage = getPageByPath(route.path)
 
     if (staticPage) {
       return staticPage
@@ -140,7 +169,8 @@ export default function() {
     homePage,
     navigation,
     pages,
-    getPage,
-    loadNavigation,
+    getPageByName,
+    getPageByPath,
+    _loadNavigation,
   }
 }

@@ -9,15 +9,18 @@ export interface Lang {
 }
 
 export default function() {
+  const { hc } = useRuntimeConfig().public
   const route = useRoute()
   const langs = useState('langs', () => ref<Lang[]>([]))
   const defaultLang = useState('defaultLang', () => ref<Lang | null>(null))
 
   const _loadLangs = async () => {
+    const hcApiPath = `${hc.content.api.base}${hc.content.api.langs}`
+    
     const { data: _langs } = await useAsyncData(
       '_langs',
       () => queryContent()
-        .where({ _partial: true, _id: 'content:_hc:api:langs.json' })
+        .where({ _partial: true, _id: `content:${hcApiPath}` })
         .findOne()
     )
     
@@ -33,7 +36,6 @@ export default function() {
   }
 
   const langCodes = computed(() => langs.value.map((lang: Lang) => lang.code))
-
   const currentLangCode = computed<LangCode>(() => route.path.split('/')[1] as LangCode)
 
   const currentLang = computed(() => {
