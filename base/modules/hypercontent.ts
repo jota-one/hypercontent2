@@ -50,6 +50,11 @@ export default defineNuxtModule<ModuleOptions>({
         }
       }
     })
+
+    nuxt.hook('nitro:build:public-assets', () => {
+      // Replace .output/public/index.html content with:
+      // <!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=/<defaultLang>"/></html>
+    })
   }
 })
 
