@@ -35,27 +35,23 @@ export interface Lang {
   path: string
 }
 
-interface Lang {
-  id: number | string
-  code: string
-  label: string
-  isDefault?: boolean
-  sort: number
-}
+export type PageShow = 'always' | 'active' | 'never'
+export type UserRole = 'user' | 'superuser' | 'admin' | 'superadmin'
+export type PageAccess = 'all' | UserRole
 
-interface Page {
-  id: number | string
+export interface Page {
+  id: number
   name: string
   sort: number
-  show: string,
-  access: string
+  show: PageShow
+  access: PageAccess
   lang: string
   label: string
   path: string
   sortedPath: string
 }
 
-interface PageContent {
+export interface PageContent {
   id: number | string
   blocks: any
   lastUpdate?: string
@@ -64,7 +60,7 @@ interface PageContent {
   editorVersion: string
 }
 
-interface PageContents {
+export interface PageContents {
   contents: PageContent[],
   resolved: any
 }
