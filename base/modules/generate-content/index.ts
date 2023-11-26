@@ -17,6 +17,12 @@ const config:Config = {
   contentBasePath: ['content']
 }
 
+const pascalToKebab = (input: string) =>
+  input.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+
+const kebabToPascal = (input: string) =>
+  input.replace(/_(\w)/gmi, (_, g1) => g1.toUpperCase())
+
 const dumpFile = async (
   content: string,
   path: string,
@@ -88,9 +94,6 @@ const getFrontMatter = (page: Page, apiUrl: string) => {
   return ymlContent
 }
 
-const pascalToKebab = (input: string) =>
-  input.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
-
 const json2mdc = (json: PageContents) => {
   const content = json.contents[0]
 
@@ -112,7 +115,7 @@ const json2mdc = (json: PageContents) => {
 
   for (const block of blocks) {
     if (block.type === 'paragraph') {
-      mdContent += `::paragraph\n${block.data?.text}\n::\n`
+      mdContent += `::block-p\n${block.data?.text}\n::\n`
     } else {
       let componentName = `:${pascalToKebab(block.type)}`
 
@@ -255,6 +258,8 @@ const generateContent = async ({
       resolvePlaceholders(HC_ENDPOINTS.navigation.path, { lang }),
       resolvePlaceholders(HC_ENDPOINTS.navigation.queryParams, { lang }),
     )
+
+    await dumpJson(navigation, join(...config.apiBasePath.concat([lang.code, 'navigation'])))
 
     // Pages
     const pages = await buildPages(navigation, lang)
