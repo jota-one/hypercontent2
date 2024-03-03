@@ -15,3 +15,11 @@ export function get(obj: any, path: string, defaultValue = {}) {
 
   return result === undefined ? defaultValue : result
 }
+
+export function pascalToKebab(input: string) {
+  return input.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+}
+
+export function kebabToPascal(input: string) {
+  return input.replace(/_(\w)/gmi, (_, g1) => g1.toUpperCase())
+}

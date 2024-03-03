@@ -1,27 +1,47 @@
 import { mkdir, rm, writeFile } from 'fs/promises'
 import { join } from 'path'
 
-import { HC_ENDPOINTS, type ContentApiEndpointDef } from './config'
-import { get } from './helpers'
+import {
+  HC_ENDPOINTS,
+  type ContentApiEndpointDef,
+  type ContentApiEndpointDynamicPageResolver
+} from './config'
+import { get, pascalToKebab } from './helpers'
 import type { Page, PageContents, Lang } from '../../index'
 
+interface ImportingPage extends Page {
+  localPath?: string
+  localSortedPath?: string
+  entity?: {
+    name: string
+    value: any
+  }
+}
 interface Config {
   apiBasePath: string[]
   apiBaseUrl: string
   contentBasePath: string[]
 }
 
+interface DynamicPageResolver {
+  endpoint: {
+    path: string
+    queryParams?: Record<string, string>
+  },
+  response: any
+  resolve: ContentApiEndpointDynamicPageResolver
+}
+
+type DynamicPageResolvers = Record<string, DynamicPageResolver>
+
+const DYNAMIC_ENTITY_PLACEHOLDER_PATTERN = /:(\w+)\.(\w+)/gim
+const PATH_CHECK_PATTERN = /[\/:\.a-z0-9-_]+/gm
+
 const config:Config = {
   apiBasePath: ['_hc', 'api'],
   apiBaseUrl: '',
   contentBasePath: ['content']
 }
-
-const pascalToKebab = (input: string) =>
-  input.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
-
-const kebabToPascal = (input: string) =>
-  input.replace(/_(\w)/gmi, (_, g1) => g1.toUpperCase())
 
 const dumpFile = async (
   content: string,
@@ -52,12 +72,12 @@ const fetchEndpoint = async (path: string, query = '') => {
 
 const resolvePlaceholders = (input: any, values = {}) => {
   const replaceInString = (input = '') => {
-    const placeholders = input.match(/{(\w+\.)+\w+}/gim) || []
+    const placeholders = input.match(/{(\w+\.?)+\w+}/gim) || []
 
     for (const placeholder of placeholders) {
       input = input.replaceAll(
         placeholder,
-        get(values, placeholder.replace(/^{(.*)}$/gim, '$1')),
+        get(values, placeholder.replace(/^{(.*)}$/gim, '$1'), ''),
       )
     }
 
@@ -67,6 +87,11 @@ const resolvePlaceholders = (input: any, values = {}) => {
   if (typeof input === 'object') {
     return Object.entries(input).reduce((acc, [key, value]) => {
       const replaced = replaceInString(value as string)
+
+      if (!replaced) {
+        return acc
+      }
+
       acc += acc ? '&' : '?'
       return acc + `${key}=${replaced}`
     }, '')
@@ -76,9 +101,6 @@ const resolvePlaceholders = (input: any, values = {}) => {
 
   return input
 }
-
-const formatDynamicPagePath = (path: string) =>
-  path.replace(/:(\w+)\.(\w+)/gim, '__$1__$2')
 
 const getFrontMatter = (page: Page, apiUrl: string) => {
   let ymlContent = `---\n`
@@ -164,65 +186,187 @@ const json2mdc = (json: PageContents) => {
   return mdContent
 }
 
-const buildPages = async (navigation: Page[], lang: Lang) => {
-  const pages = navigation.map(page => ({
-    ...page,
-    path: formatDynamicPagePath(page.path),
-    sortedPath: formatDynamicPagePath(page.sortedPath),
-  }))
+const resolveInputWithEntity = (
+  input: string,
+  entityName: string,
+  entity: any
+): string => {
+  let resolvedInput = ''
 
+  const placeHolderMatches = input
+    .match(DYNAMIC_ENTITY_PLACEHOLDER_PATTERN)
+
+  if (!placeHolderMatches) {
+    return input
+  }
+
+  for (const placeHolder of placeHolderMatches) {
+    const entityProp = placeHolder.replace(`:${entityName}.`, '')
+    resolvedInput = (resolvedInput || input).replaceAll(
+      placeHolder,
+      entity[entityProp]
+    )
+  }
+
+  return resolvedInput
+}
+
+const buildPages = async (
+  navigation: ImportingPage[],
+  lang: Lang,
+  dynamicPageResolvers: DynamicPageResolvers
+): Promise<ImportingPage[]> => {
+  const resolveSlug = (page: Page, value: string) => {
+    const [entity, property] = page.path.split(':')[1].split('.')
+    return `${entity}.${property}%253D${value}`
+  }
+
+  const pages: ImportingPage[] = []
+
+  for (let i = 0; i < navigation.length; i++) {
+    const page = navigation[i]
+
+    if (!page.path.includes(':')) {
+      // Push static pages in pages array
+      pages.push(page)
+    } else {
+      // Resolve dynamic pages and push them as static pages in the array
+      const entityName = page.path
+        .split('/')
+        .filter(p => p.includes(':'))
+        .map(p => p.slice(1).split('.')[0])
+        .join('')
+
+      const resolver = dynamicPageResolvers[entityName]
+
+      if (resolver) {
+        const entities = resolver.resolve(resolver.response)
+
+        const resolvePageWithEntity = (
+          page: ImportingPage,
+          entity: any
+        ): ImportingPage => {
+          return {
+            ...page,
+            label: resolveInputWithEntity(page.label, entityName, entity),
+            path: resolveInputWithEntity(page.path, entityName, entity),
+            sortedPath: resolveInputWithEntity(
+              page.sortedPath, entityName, entity
+            ),
+            entity: {
+              name: entityName,
+              value: entity
+            }
+          }
+        }
+
+        for (const entity of entities) {
+          pages.push(resolvePageWithEntity(page, entity))
+        }
+
+        continue
+      } else {
+        // If no resolver found, push the page as static template page
+        pages.push(page)
+      }
+    }
+  }
+
+  // Write md file for each page and create folder according to page path
   for (let i = 0; i < pages.length; i++) {
     const page = pages[i]
+    const pathCheck = page.path.match(PATH_CHECK_PATTERN)
 
-    const { json: content, url: pageApiUrl } = await fetchEndpoint(
+    if (!pathCheck || pathCheck[0] !== page.path) {
+      throw new Error(`Page path ${
+        page.path
+      } contains invalid character(s) => path check pattern: ${
+        PATH_CHECK_PATTERN
+      }`)
+    }
+
+    page.localSortedPath = page.sortedPath.replace(
+      DYNAMIC_ENTITY_PLACEHOLDER_PATTERN,
+      (_, g1, g2) => `__${g1}.${g2}__`
+    )
+
+    let { json: content, url: pageApiUrl } = await fetchEndpoint(
       resolvePlaceholders(HC_ENDPOINTS.contents.path, { page }),
       resolvePlaceholders(HC_ENDPOINTS.contents.queryParams, { lang }),
     )
+
+    if (page.entity) {
+      // Replace entity props in content, e.g. :city.label => lausanne
+      let resolvedContentStr = resolveInputWithEntity(
+        JSON.stringify(content),
+        page.entity.name,
+        page.entity.value
+      )
+
+      // Replace full entity in content escaped json
+      resolvedContentStr = resolvedContentStr.replaceAll(
+        `\\":${page.entity.name}\\"`,
+        JSON.stringify(page.entity.value).replaceAll('"', '\\"')
+      )
+
+      content = JSON.parse(resolvedContentStr)
+    }
 
     const nextPage = i < navigation.length && navigation[i + 1]
     const createDir = nextPage && nextPage.sortedPath.includes(page.sortedPath)
 
     // Write _dir.yml file to skip section from nuxt content navigation
     if (page.show === 'never' && createDir) {
-      await dumpFile('navigation: false', `${page.sortedPath}/_dir`, 'yml')
+      await dumpFile('navigation: false', `${page.localSortedPath}/_dir`, 'yml')
     }
 
     // Adapt path folder structure + generate markdown content
-    const path = createDir ? (page.sortedPath += '/0.index') : page.sortedPath
+    page.localPath = createDir
+      ? (page.localSortedPath += '/0.index')
+      : page.localSortedPath
+
     const mdContent = getFrontMatter(page, pageApiUrl) + json2mdc(content)
 
     // Write page on disk
     if (mdContent) {
-      await dumpFile(mdContent, path, 'md')
+      await dumpFile(mdContent, page.localPath, 'md')
     }
+
+    // Remove sort from localPath
+    page.localPath = page.localPath
+      .replace(`/${page.sort + 1}.`, '/')
+      .replace('/0.index', '')
   }
 
   return pages
 }
 
 const generateContent = async ({
-  apiUrl,
-  contentRoot,
+  apiBaseUrl,
+  contentRootFolder,
   excludeLabelKeyPrefixes,
   customContentApiEndpoints,
 } : {
-  apiUrl: string
-  contentRoot?: string
+  apiBaseUrl: string
+  contentRootFolder?: string
   excludeLabelKeyPrefixes?: string[]
   customContentApiEndpoints?: Record<string, ContentApiEndpointDef>
 }) => {
   // Set api url
-  config.apiBaseUrl = apiUrl
+  config.apiBaseUrl = apiBaseUrl
 
   // Update content base path
-  if (contentRoot) {
-    config.contentBasePath = [contentRoot]
+  if (contentRootFolder) {
+    config.contentBasePath = [contentRootFolder]
   }
 
   // Set default excluded label keys
   const _excludeLabelKeyPrefixes = ['hc_', ...(excludeLabelKeyPrefixes || [])]
 
-  console.log(`Generating content from ${apiUrl} into "${join(...config.contentBasePath)}"...`)
+  {
+    const into = join(...config.contentBasePath)
+    console.log(`Generating content from ${apiBaseUrl} into "${into}"...`)
+  }
 
   // Cleanup
   await rm(join(...config.contentBasePath), { recursive: true, force: true })
@@ -236,7 +380,10 @@ const generateContent = async ({
   // Fetch and dump HC endpoints
   for (const lang of langs) {
     // Create language dir
-    await mkdir(join(...config.contentBasePath.concat(lang.code)), { recursive: true })
+    await mkdir(
+      join(...config.contentBasePath.concat(lang.code)),
+      { recursive: true }
+    )
 
     // Labels
     const { json: labels } = await fetchEndpoint(
@@ -244,14 +391,20 @@ const generateContent = async ({
     )
 
     const filteredLabels = Object.entries(labels)
-        .reduce((acc: any, [key, value])  => {
-          if (!_excludeLabelKeyPrefixes.some(prefix => key.startsWith(prefix))) {
-            acc[key] = value
-          }
-          return acc
-        }, {})
-    
-      await dumpJson(filteredLabels, join(...config.apiBasePath.concat([lang.code, 'labels'])))
+      .reduce((acc: any, [key, value])  => {
+        if (
+          !_excludeLabelKeyPrefixes.some(prefix => key.startsWith(prefix))
+        ) {
+          acc[key] = value
+        }
+
+        return acc
+      }, {})
+
+      await dumpJson(
+        filteredLabels,
+        join(...config.apiBasePath.concat([lang.code, 'labels']))
+      )
 
     // Navigation
     const { json: navigation } = await fetchEndpoint(
@@ -259,16 +412,54 @@ const generateContent = async ({
       resolvePlaceholders(HC_ENDPOINTS.navigation.queryParams, { lang }),
     )
 
-    await dumpJson(navigation, join(...config.apiBasePath.concat([lang.code, 'navigation'])))
+    await dumpJson(
+      navigation,
+      join(...config.apiBasePath.concat([lang.code, 'navigation']))
+    )
+
+    // Custom content api endpoints
+    const dynamicPageResolvers: DynamicPageResolvers = {}
+    if (customContentApiEndpoints) {
+      for (
+        const [name, endpointDef] of Object.entries(customContentApiEndpoints)
+      ) {
+        const { json } = await fetchEndpoint(
+          resolvePlaceholders(endpointDef.path, { lang }),
+          resolvePlaceholders(endpointDef.queryParams, { lang }),
+        )
+
+        await dumpJson(
+          json,
+          join(...config.apiBasePath.concat([lang.code, name]))
+        )
+
+        const resolver = endpointDef.dynamicPageResolver
+
+        if (resolver) {
+          dynamicPageResolvers[resolver.entityName] = {
+            endpoint: {
+              path: endpointDef.path,
+              ...(
+                endpointDef.queryParams
+                  ? { queryParams: endpointDef.queryParams }
+                  : {}
+              )
+            },
+            response: json,
+            resolve: resolver.resolve
+          }
+        }
+      }
+    }
 
     // Pages
-    const pages = await buildPages(navigation, lang)
+    const pages = await buildPages(navigation, lang, dynamicPageResolvers)
 
     // Push pages to pageLinks
     pageLinks = pageLinks.concat(
-      pages.map((page: Page) =>
-        `- [${page.label.replace(/:(.*)\./gmi, '__$1__.')}](${page.path})`
-      ),
+      pages.map((page: ImportingPage) =>
+        `- [${page.label.replace(/:(.*)\./gmi, '__$1__.')}](${page.localPath})`
+      )
     )
   }
 
