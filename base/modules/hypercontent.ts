@@ -1,5 +1,8 @@
+import { join as joinPaths } from 'node:path'
+import { readFile, writeFile } from 'node:fs/promises'
+
 import { defineNuxtModule } from '@nuxt/kit'
-import generateContentModule from './generate-content'
+import generateContentModule, { config } from './generate-content'
 import type { ContentApiEndpointDef } from './generate-content/config'
 
 export interface ModuleOptions {
@@ -33,7 +36,7 @@ export interface ModuleOptions {
      * `_hc/api/<path>` folder under `contentRootFolder`.
      *
      * If you have dynamic pages that need to be resolved against custom entities
-     * you can define them via `customContentApiEndpoints.dynamicRouteResolver`
+     * you can define them via `customContentApiEndpoints.dynamicPageResolver`
      */
     customContentApiEndpoints?: Record<string, ContentApiEndpointDef>
   }
@@ -65,6 +68,7 @@ export default defineNuxtModule<ModuleOptions>({
           excludeLabelKeyPrefixes,
           customContentApiEndpoints,
         } = options.generateContent
+
         const { generateContent } = generateContentModule()
 
         if (apiBaseUrl) {
@@ -78,9 +82,18 @@ export default defineNuxtModule<ModuleOptions>({
       }
     })
 
-    nuxt.hook('nitro:build:public-assets', () => {
-      // Replace .output/public/index.html content with:
-      // <!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=/<defaultLang>"/></html>
+    nuxt.hook('nitro:build:public-assets', async (obj: any) => {
+      const outputRoot = obj.options.output.publicDir
+      const home = obj._prerenderedRoutes
+        .find((route: any) => route.route === '/')
+      const homeHtmlFile = joinPaths(outputRoot, home.fileName)
+      const contentRoot = obj.options.devStorage['content:source:content'].base
+      const langsFile = joinPaths(contentRoot, ...config.apiBasePath, 'langs.json')
+      const langs = JSON.parse(await readFile(langsFile, 'utf8'))
+      const defaultLang = langs.find((lang: any) => lang.is_default).code
+      const homeHtmlContent = `'<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=/${defaultLang}"/></html>'`
+
+      await writeFile(homeHtmlFile, homeHtmlContent, 'utf8')
     })
   }
 })

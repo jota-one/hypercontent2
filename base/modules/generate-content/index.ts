@@ -37,7 +37,7 @@ type DynamicPageResolvers = Record<string, DynamicPageResolver>
 const DYNAMIC_ENTITY_PLACEHOLDER_PATTERN = /:(\w+)\.(\w+)/gim
 const PATH_CHECK_PATTERN = /[\/:\.a-z0-9-_]+/gm
 
-const config:Config = {
+export const config:Config = {
   apiBasePath: ['_hc', 'api'],
   apiBaseUrl: '',
   contentBasePath: ['content']
