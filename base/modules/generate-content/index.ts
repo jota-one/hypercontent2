@@ -227,10 +227,11 @@ const buildPages = async (
     const page = navigation[i]
 
     if (!page.path.includes(':')) {
-      // Push static pages in pages array
+      // Push static page in pages array
       pages.push(page)
     } else {
-      // Resolve dynamic pages and push them as static pages in the array
+      // Resolve dynamic page and push result (entites in the response)
+      // as static pages in the array
       const entityName = page.path
         .split('/')
         .filter(p => p.includes(':'))
@@ -423,6 +424,17 @@ const generateContent = async ({
       for (
         const [name, endpointDef] of Object.entries(customContentApiEndpoints)
       ) {
+        const nameCheckPattern = /[a-zA-Z0-9-_]+/gm
+        const nameCheck = name.match(nameCheckPattern)
+
+        if (nameCheck === null || nameCheck[0] !== name) {
+          throw new Error(`customContentApiEndpoint name ${
+            name
+          } contains invalid character(s) => name check pattern: ${
+            nameCheckPattern
+          }`)
+        }
+
         const { json } = await fetchEndpoint(
           resolvePlaceholders(endpointDef.path, { lang }),
           resolvePlaceholders(endpointDef.queryParams, { lang }),
