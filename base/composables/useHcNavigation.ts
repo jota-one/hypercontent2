@@ -1,4 +1,4 @@
-import type { Page } from '../index'
+import type { Page, PageShow } from '../index'
 
 export interface Pages {
   [id: string]: Page
@@ -9,7 +9,7 @@ type NavigationItem = {
   path: string
   label: string
   sort: number
-  show: ShowPage
+  show: PageShow
   children?: NavigationItem[]
 }
 
@@ -108,7 +108,7 @@ export default function() {
           sort: page.sort,
           show: page.show
         }
-        
+
         const parentIndex = _navigation.findIndex(n => n.pageId === parent?.pageId)
         _navigation[parentIndex] = parent
       }
@@ -131,7 +131,7 @@ export default function() {
     )
   }
 
-  const currentPage = computed(() => {
+  const currentPage = computed<Page | undefined>(() => {
     const staticPage = getPageByPath(route.path)
 
     if (staticPage) {

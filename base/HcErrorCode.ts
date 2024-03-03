@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-enum HcErrorCode {
+export enum HcErrorCode {
   ERROR_HC_USER_ACTIVATION_TOKEN_EXPIRED,
   ERROR_HC_USER_ALREADY_EXISTS,
   ERROR_HC_PENDING_USER_NOT_FOUND,
@@ -23,5 +23,3 @@ enum HcErrorCode {
   ERROR_HC_SUBSCRIPTION_NOT_FOUND,
   ERROR_HC_USER_PENDING,
 }
-
-export default HcErrorCode
