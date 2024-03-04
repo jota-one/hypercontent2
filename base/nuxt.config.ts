@@ -29,6 +29,7 @@ export default defineNuxtConfig({
     '@nuxtjs/plausible',
     '@nuxtjs/tailwindcss',
     '@nuxt/content',
+    '@element-plus/nuxt',
     join(currentDir, 'modules/hypercontent'),
   ],
 

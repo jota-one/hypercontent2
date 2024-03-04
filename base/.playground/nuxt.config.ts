@@ -1,4 +1,4 @@
-const apiUrl = 'http://localhost:3000/api'
+const apiBaseUrl = 'http://localhost:3000/api'
 
 export default defineNuxtConfig({
   extends: '..',
@@ -6,14 +6,14 @@ export default defineNuxtConfig({
   hypercontent: {
     generateContent: {
       enabled: false,
-      apiUrl,
-      contentRoot: './.playground/content'
+      apiBaseUrl,
+      contentRootFolder: './.playground/content'
     }
   },
 
   runtimeConfig: {
     public: {
-      hcRemoteApi: apiUrl
+      hcRemoteApi: apiBaseUrl
     }
   }
 })
