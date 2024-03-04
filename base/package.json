@@ -1,5 +1,5 @@
 {
-  "name": "hypercontent",
+  "name": "@jota-one/hypercontent",
   "type": "module",
   "version": "0.1.0",
   "main": "./nuxt.config.ts",
