@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  extends: ['../base'],
+  extends: ['github:jota-one/hypercontent/base', { install: true }],
 
   hypercontent: {
     generateContent: {
