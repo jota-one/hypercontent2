@@ -53,7 +53,7 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: {
     generateContent: {
       enabled: false,
-      // apiBaseUrl: 'http://localhost:8090/api',
+      apiBaseUrl: 'http://localhost:8090/api',
       contentRootFolder: 'content',
       excludeLabelKeyPrefixes: [],
       customContentApiEndpoints: {},
