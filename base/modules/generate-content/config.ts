@@ -24,4 +24,32 @@ export const HC_ENDPOINTS = {
     path: '/teasers',
     queryParams: { lang_id: '{lang.id}' },
   },
+  teaser: {
+    path: '/teasers/{teaser.id}',
+    queryParams: { lang_id: '{lang.id}' },
+  },
+  cities: {
+    path: '/cities',
+    queryParams: { lang_id: '{lang.id}' },
+  },
+  city: {
+    path: '/cities/{city.id}',
+    queryParams: { lang_id: '{lang.id}' },
+  },
+  locations: {
+    path: '/locations',
+    queryParams: { lang_id: '{lang.id}' },
+  },
+  location: {
+    path: '/locations/{location.id}',
+    queryParams: { lang_id: '{lang.id}' },
+  },
+  sponsors: {
+    path: '/sponsors',
+    queryParams: { lang_id: '{lang.id}' },
+  },
+  sponsor: {
+    path: '/sponsor/{sponsor.id}',
+    queryParams: { lang_id: '{lang.id}' },
+  }
 }

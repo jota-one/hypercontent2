@@ -1,0 +1,48 @@
+{
+  "internal": {
+    "tables": ["users", "configs"]
+  },
+  "cms": {
+    "tables": [
+      "HcConfigs",
+      "HcLabels",
+      "HcLangs",
+      "HcPages",
+      "HcContents",
+      "HcTeasers",
+      "HcTeasersTargets",
+      "HcTeasersLang",
+      "HcPagesLang",
+      "HcNavigation"
+    ]
+  },
+  "users": {
+    "tables": ["HcRoles", "HcUsers"]
+  },
+  "events": {
+    "tables": [
+      "HcCityWatchers",
+      "HcEventTypes",
+      "HcEventTypesEvents",
+      "HcEventTypesLang",
+      "HcEvents",
+      "HcEventsLang",
+      "HcEventsSubscriptions",
+      "HcLocations",
+      "HcLocationsLang",
+      "HcCities"
+    ]
+  },
+  "sponsors": {
+    "tables": ["HcSponsorsLang", "HcSponsors"]
+  },
+  "custom": {
+    "tables": [
+      "UtRegions",
+      "UtRegionsLang",
+      "UtEventProposers",
+      "UtEventProposersEvents",
+      "UtUserInfos"
+    ]
+  }
+}
