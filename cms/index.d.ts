@@ -130,3 +130,27 @@ export interface TeaserLangRecord {
 export interface TeaserListItemAdminModel extends TeaserAdminModel {
   source: Record<LangCode, PageSelectorModel>
 }
+
+
+export type Coords = [number, number]
+
+export interface City {
+  id: number
+  label: string
+  coords: Coords
+  slug: string
+  sponsors: number[]
+}
+
+export type Sponsor = {
+  id: number
+  name: string
+  title?: string
+  isGlobal: boolean
+  bgColor?: string
+}
+
+export type SponsorWithDetail = Sponsor & {
+  content: any[]
+  link?: Link
+}

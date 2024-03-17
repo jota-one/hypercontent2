@@ -21,13 +21,13 @@ export default defineNuxtConfig({
     documentDriven: true,
   },
 
-  experimental: {
-    inlineSSRStyles: false,
-  },
+  // experimental: {
+  //   inlineSSRStyles: false,
+  // },
 
   modules: [
     '@nuxt/content',
-    '@nuxt/image',
+    // '@nuxt/image',
     '@nuxtjs/plausible',
     '@nuxtjs/tailwindcss',
     '@element-plus/nuxt',
