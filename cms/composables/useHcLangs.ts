@@ -16,14 +16,14 @@ export default function() {
 
   const _loadLangs = async () => {
     const hcApiPath = `${hc.content.api.base}${hc.content.api.langs}`
-    
+
     const { data: _langs } = await useAsyncData(
       '_langs',
       () => queryContent()
         .where({ _partial: true, _id: `content:${hcApiPath}` })
         .findOne()
     )
-    
+
     if (_langs.value) {
       langs.value = _langs.value?.body as unknown as Lang[]
     }

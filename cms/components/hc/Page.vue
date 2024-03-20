@@ -6,7 +6,6 @@
 <script setup lang="ts">
 import type { PageAccess } from '../../index'
 
-const route = useRoute()
 const { page } = useContent()
 const { isAuthenticated } = useHcAuth()
 
