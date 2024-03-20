@@ -6,7 +6,7 @@ export default function() {
   const dayjsLocales = useState('dayjsLocales', () => ref<Partial<Record<LangCode, any>>>({}))
   const currentDayjsLocale = useState('currentDayjsLocale', () => ref<any>())
 
-  const loadLocale = async (langCode?: LangCode): Promise<any> => {
+  const _loadLocale = async (langCode?: LangCode): Promise<any> => {
     const code = langCode || currentLangCode.value
 
     if (dayjsLocales.value && dayjsLocales.value[code]) {
@@ -32,12 +32,12 @@ export default function() {
 
   const getLocaleDate = (date: Dayjs | Date) => {
     if (!currentDayjsLocale.value) {
-      throw new Error('Dayjs locale is not set. Please call loadDateLocale() first.')
+      throw new Error('Dayjs locale is not set. Please call _loadDateLocale() first.')
     }
 
     // eslint-disable-next-line import/no-named-as-default-member
     return (dayjs.isDayjs(date) ? date : dayjs(date)).locale(currentDayjsLocale.value)
   }
 
-  return { currentDayjsLocale, dayjsLocales, getLocaleDate, loadLocale }
+  return { currentDayjsLocale, dayjsLocales, getLocaleDate, _loadLocale }
 }

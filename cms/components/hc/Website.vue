@@ -26,9 +26,10 @@ const ready = ref(false)
 if (route.path === '/' || route.path === '/admin') {
   ready.value = true
 } else {
-  const { _loadLangs } = useHcLangs()
+  const { _loadLangs, currentLangCode } = useHcLangs()
   const { _loadLabels } = useHcLabels()
   const { _loadNavigation } = useHcNavigation()
+  const { _loadLocale } = useHcLocaleDate()
 
   await _loadLangs()
   await _loadLabels()
@@ -43,5 +44,9 @@ if (route.path === '/' || route.path === '/admin') {
   }
 
   ready.value = true
+
+  onMounted(async () => {
+    await _loadLocale(currentLangCode.value)
+  })
 }
 </script>
