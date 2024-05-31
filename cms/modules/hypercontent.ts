@@ -3,7 +3,7 @@ import { readFile, writeFile } from 'node:fs/promises'
 
 import { defineNuxtModule } from '@nuxt/kit'
 import generateContentModule, { config } from './generate-content'
-import type { ContentApiEndpointDef } from './generate-content/config'
+import type { ContentApiEndpointDef } from '../common/config'
 
 export interface ModuleOptions {
   generateContent: {
