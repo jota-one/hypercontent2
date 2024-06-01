@@ -15,33 +15,54 @@ export default function() {
   const isAuthenticated = computed<boolean>(() => !!auth.value.user?.id)
   const userId = computed<number | string | undefined>(() => auth.value.user?.id)
 
-  const generateResetPasswordLink = (
+  const generateResetPasswordLink = async (
     email: string,
     captchaToken: string,
     langCode: LangCode,
   ): Promise<string> => {
-    return $fetch(`${runtimeConfig.hcRemoteApi}/accounts/passwords/reset-links`, {
+    const response = await fetch(`${runtimeConfig.hcRemoteApi}/accounts/passwords/reset-links?lang_code=${langCode}`, {
       method: 'POST',
-      body: { email, captchaToken },
-      params: { lang_code: langCode },
+      body: JSON.stringify({ email, captchaToken })
     })
+
+    const responseBody = await response.json()
+
+    if (response.status === 200) {
+      return responseBody
+    } else {
+      throw new Error(responseBody.message)
+    }
   }
-  
+
   const login = async (credentials: { email: string; password: string }) => {
-    const result = await $fetch<AuthState>(`${runtimeConfig.hcRemoteApi}/login`, {
+    const response = await fetch(`${runtimeConfig.hcRemoteApi}/login`, {
       method: 'post',
       body: JSON.stringify(credentials)
     })
 
-    auth.value = result
+    const responseBody = await response.json()
+
+    if (response.status === 200) {
+      auth.value = responseBody
+    } else {
+      throw new Error(responseBody.message)
+    }
   }
 
   const logout = async () => {
-    const result = await $fetch<AuthState>(`${runtimeConfig.hcRemoteApi}/logout`, {
+    const response = await fetch(`${runtimeConfig.hcRemoteApi}/logout`, {
       method: 'POST',
     })
 
-    auth.value = result
+    const responseBody = await response.json()
+
+    if (response.status === 200) {
+      auth.value = responseBody
+    } else {
+      throw new Error(responseBody.message)
+    }
+
+    auth.value = responseBody
   }
 
   return {
