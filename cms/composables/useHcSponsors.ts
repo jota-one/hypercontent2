@@ -35,7 +35,7 @@ export const useHcSponsors = () => {
     ref<SponsorsWithDetail>({}),
   )
 
-  const _loadSponsors = async () => {
+  const loadSponsors = async () => {
     const langCode = currentLangCode.value || defaultLang.value?.code || 'en'
     const hcApiPath = `${hc.content.api.base}${langCode}:sponsors.json`
     const { data: _sponsorsList } = await useAsyncData('_sponsors', () =>
@@ -89,6 +89,6 @@ export const useHcSponsors = () => {
     sponsors,
     sponsorsWithDetail,
     loadSponsorsWithDetail,
-    _loadSponsors,
+    loadSponsors,
   }
 }

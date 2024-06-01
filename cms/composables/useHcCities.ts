@@ -20,7 +20,7 @@ export const useHcCities = () => {
   const cities = useState('cities', () => ref<Cities>({}))
   const filteredCities = useState('filteredCities', () => ref<City[]>([]))
 
-  const _loadCities = async () => {
+  const loadCities = async () => {
     const langCode = currentLangCode.value || defaultLang.value?.code || 'en'
     const hcApiPath = `${hc.content.api.base}${langCode}:cities.json`
     const { data: _citiesList } = await useAsyncData('_cities', () =>
@@ -45,6 +45,6 @@ export const useHcCities = () => {
   return {
     cities,
     filteredCities,
-    _loadCities,
+    loadCities,
   }
 }
