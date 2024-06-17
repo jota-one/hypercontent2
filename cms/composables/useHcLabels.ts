@@ -1,11 +1,11 @@
 export default function () {
-  const { hc } = useRuntimeConfig().public
+  const { hypercontent } = useRuntimeConfig().public
   const { currentLangCode, defaultLang } = useHcLangs()
   const labels = useState<Record<string, string>>('labels', () => ({}))
 
   const _loadLabels = async () => {
     const langCode = currentLangCode.value || defaultLang.value?.code || 'en'
-    const hcApiPath = `${hc.content.api.base}${hc.content.api.labels
+    const hcApiPath = `${hypercontent.content.api.base}${hypercontent.content.api.labels
       .replace('__langCode__', langCode)}`
 
     const { data: _labels } = await useAsyncData('_labels', () =>

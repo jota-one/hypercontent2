@@ -27,7 +27,7 @@ interface SponsorWithDetailResponseItem {
 }
 
 export const useHcSponsors = () => {
-  const { hc } = useRuntimeConfig().public
+  const { hypercontent } = useRuntimeConfig().public
   const { currentLangCode, defaultLang } = useHcLangs()
 
   const sponsors = useState('sponsors', () => ref<Sponsors>({}))
@@ -37,7 +37,7 @@ export const useHcSponsors = () => {
 
   const loadSponsors = async () => {
     const langCode = currentLangCode.value || defaultLang.value?.code || 'en'
-    const hcApiPath = `${hc.content.api.base}${langCode}:sponsors.json`
+    const hcApiPath = `${hypercontent.content.api.base}${langCode}:sponsors.json`
     const { data: _sponsorsList } = await useAsyncData('_sponsors', () =>
       queryContent()
         .where({ _partial: true, _id: `content:${hcApiPath}` })
@@ -59,7 +59,7 @@ export const useHcSponsors = () => {
 
   const loadSponsorsWithDetail = async () => {
     const langCode = currentLangCode.value || defaultLang.value?.code || 'en'
-    const hcApiPath = `${hc.content.api.base}${langCode}:sponsorsDetail.json`
+    const hcApiPath = `${hypercontent.content.api.base}${langCode}:sponsorsDetail.json`
     const { data: _sponsorsList } = await useAsyncData('_sponsorsDetail', () =>
       queryContent()
         .where({ _partial: true, _id: `content:${hcApiPath}` })

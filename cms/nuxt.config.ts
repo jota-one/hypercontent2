@@ -26,13 +26,12 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxtjs/plausible',
     '@nuxtjs/tailwindcss',
-    '@element-plus/nuxt',
     join(currentDir, 'modules/hypercontent'),
   ],
 
   runtimeConfig: {
     public: {
-      hc: {
+      hypercontent: {
         content: {
           api: {
             base: '_hc:api:',

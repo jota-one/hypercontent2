@@ -2,12 +2,12 @@ import dayjs from 'dayjs'
 import type { Teaser } from '../index'
 
 export const useHcTeasers = () => {
-  const { hcRemoteApi } = useRuntimeConfig().public
+  const { hypercontent } = useRuntimeConfig().public
   const { currentLang } = useHcLangs()
   const { currentPage } = useHcNavigation()
 
   const getTeasers = async () => {
-    const response = await fetch(`${hcRemoteApi}/teasers?lang_id=${currentLang.value?.id}`)
+    const response = await fetch(`${hypercontent.remoteApi}/teasers?lang_id=${currentLang.value?.id}`)
     const teasers = await response.json()
 
     return (teasers || []).filter((teaser: Teaser) => {

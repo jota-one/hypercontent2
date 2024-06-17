@@ -13,7 +13,7 @@ interface CityResponseItem {
 }
 
 export const useHcCities = () => {
-  const { hc } = useRuntimeConfig().public
+  const { hypercontent } = useRuntimeConfig().public
   const { currentLangCode, defaultLang } = useHcLangs()
   const { buildCoords } = useHcCoords()
 
@@ -22,7 +22,7 @@ export const useHcCities = () => {
 
   const loadCities = async () => {
     const langCode = currentLangCode.value || defaultLang.value?.code || 'en'
-    const hcApiPath = `${hc.content.api.base}${langCode}:cities.json`
+    const hcApiPath = `${hypercontent.content.api.base}${langCode}:cities.json`
     const { data: _citiesList } = await useAsyncData('_cities', () =>
       queryContent()
         .where({ _partial: true, _id: `content:${hcApiPath}` })

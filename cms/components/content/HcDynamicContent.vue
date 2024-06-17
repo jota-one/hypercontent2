@@ -91,7 +91,7 @@ const fetchEntity = async (entity: string, field: string) => {
   const apiEndpointQueryParams = resolveEndpointDefPlaceholders(endpoint.detail.queryParams, { lang })
 
   const res = await fetch(
-    `${runtimeConfig.hcRemoteApi}${apiEndpointPath}${apiEndpointQueryParams}`,
+    `${runtimeConfig.hypercontent.remoteApi}${apiEndpointPath}${apiEndpointQueryParams}`,
   )
 
   if (res.status === 200) {

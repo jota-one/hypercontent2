@@ -13,7 +13,14 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      hcRemoteApi: apiBaseUrl
+      hypercontent: {
+        remoteApi: apiBaseUrl,
+        jwt: {
+          token: {
+            name: '',
+          },
+        },
+      }
     }
   }
 })

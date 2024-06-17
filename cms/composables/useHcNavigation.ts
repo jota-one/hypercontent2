@@ -14,7 +14,7 @@ type NavigationItem = {
 }
 
 export default function() {
-  const { hc } = useRuntimeConfig().public
+  const { hypercontent } = useRuntimeConfig().public
   const route = useRoute()
   const { currentLangCode, defaultLang } = useHcLangs()
 
@@ -24,7 +24,7 @@ export default function() {
 
   const _loadNavigation = async () => {
     const langCode = currentLangCode.value || defaultLang.value?.code || 'en'
-    const hcApiPath = `${hc.content.api.base}${hc.content.api.navigation.replace('__langCode__', langCode)}`
+    const hcApiPath = `${hypercontent.content.api.base}${hypercontent.content.api.navigation.replace('__langCode__', langCode)}`
 
     const { data: _pageList } = await useAsyncData(
       '_navigation',

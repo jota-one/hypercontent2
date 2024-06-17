@@ -9,13 +9,13 @@ export interface Lang {
 }
 
 export default function() {
-  const { hc } = useRuntimeConfig().public
+  const { hypercontent } = useRuntimeConfig().public
   const route = useRoute()
   const langs = useState('langs', () => ref<Lang[]>([]))
   const defaultLang = useState('defaultLang', () => ref<Lang | null>(null))
 
   const _loadLangs = async () => {
-    const hcApiPath = `${hc.content.api.base}${hc.content.api.langs}`
+    const hcApiPath = `${hypercontent.content.api.base}${hypercontent.content.api.langs}`
 
     const { data: _langs } = await useAsyncData(
       '_langs',
