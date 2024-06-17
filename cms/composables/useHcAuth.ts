@@ -1,26 +1,29 @@
+import { useStorage } from '@vueuse/core'
 import type { LangCode, UserRole } from "../index"
 
-interface AuthState {
-  user?: User
-}
-
-interface User {
-  id: number | string
-  role: UserRole
-}
-
-export default function() {
+export const useHcAuth = () => {
   const runtimeConfig = useRuntimeConfig().public
-  const auth = useState<AuthState>('auth', () => ({}))
-  const isAuthenticated = computed<boolean>(() => !!auth.value.user?.id)
-  const userId = computed<number | string | undefined>(() => auth.value.user?.id)
+  const { $localStorage } = useNuxtApp()
+  const isAuthenticated = useState('isAuthenticated', () => false)
+
+  const checkAuth = async () => {
+    const token = $localStorage.getItem(runtimeConfig.hypercontent.jwt.token.name) || ''
+    const response = await fetch(`${runtimeConfig.hypercontent.remoteApi}/auth/check`, {
+      method: 'HEAD',
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    })
+
+    isAuthenticated.value = response.status === 200
+  }
 
   const generateResetPasswordLink = async (
     email: string,
     captchaToken: string,
     langCode: LangCode,
   ): Promise<string> => {
-    const response = await fetch(`${runtimeConfig.hcRemoteApi}/accounts/passwords/reset-links?lang_code=${langCode}`, {
+    const response = await fetch(`${runtimeConfig.hypercontent.remoteApi}/accounts/passwords/reset-links?lang_code=${langCode}`, {
       method: 'POST',
       body: JSON.stringify({ email, captchaToken })
     })
@@ -35,7 +38,7 @@ export default function() {
   }
 
   const login = async (credentials: { email: string; password: string }) => {
-    const response = await fetch(`${runtimeConfig.hcRemoteApi}/login`, {
+    const response = await fetch(`${runtimeConfig.hypercontent.remoteApi}/auth/login?static`, {
       method: 'post',
       body: JSON.stringify(credentials)
     })
@@ -43,31 +46,30 @@ export default function() {
     const responseBody = await response.json()
 
     if (response.status === 200) {
-      auth.value = responseBody
+      $localStorage.setItem(runtimeConfig.hypercontent.jwt.token.name, responseBody.token)
+      isAuthenticated.value = true
     } else {
       throw new Error(responseBody.message)
     }
   }
 
   const logout = async () => {
-    const response = await fetch(`${runtimeConfig.hcRemoteApi}/logout`, {
+    const response = await fetch(`${runtimeConfig.hypercontent.remoteApi}/auth/logout`, {
       method: 'POST',
     })
 
     const responseBody = await response.json()
 
     if (response.status === 200) {
-      auth.value = responseBody
+      isAuthenticated.value = false
     } else {
       throw new Error(responseBody.message)
     }
-
-    auth.value = responseBody
   }
 
   return {
     isAuthenticated,
-    userId,
+    checkAuth,
     generateResetPasswordLink,
     login,
     logout,
