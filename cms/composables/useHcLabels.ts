@@ -1,12 +1,14 @@
+import { computeLabel } from './i36n'
+
 export default function () {
   const { hypercontent } = useRuntimeConfig().public
   const { currentLangCode, defaultLang } = useHcLangs()
-  const labels = useState<Record<string, string>>('labels', () => ({}))
+  const labels = useState<Record<string, Record<string, string>>>('labels', () => ({}))
+  const langCode = computed(() => currentLangCode.value || defaultLang.value?.code || 'en')
 
   const _loadLabels = async () => {
-    const langCode = currentLangCode.value || defaultLang.value?.code || 'en'
     const hcApiPath = `${hypercontent.content.api.base}${hypercontent.content.api.labels
-      .replace('__langCode__', langCode)}`
+      .replace('__langCode__', langCode.value)}`
 
     const { data: _labels } = await useAsyncData('_labels', () =>
       queryContent()
@@ -18,12 +20,14 @@ export default function () {
     )
 
     if (_labels.value) {
-      labels.value = _labels.value
+      labels.value = {
+        [langCode.value]: _labels.value as Record<string, string>
+      }
     }
   }
 
-  const l = computed(() => (key: string, values?: object) => {
-    return labels.value[key] || `{${key}}`
+  const l = computed(() => (key: string, values?: Record<string, string>) => {
+    return computeLabel(' ', labels.value, langCode.value)(key, values || {}, null, false) || `{${key}}`
   })
 
   return { _loadLabels, l, labels }
