@@ -23,9 +23,9 @@ importers:
       dayjs:
         specifier: ^1.11.11
         version: 1.11.11
-      jose:
-        specifier: ^5.4.0
-        version: 5.4.0
+      snarkdown:
+        specifier: ^2.0.0
+        version: 2.0.0
     devDependencies:
       '@nuxt/eslint-config':
         specifier: ^0.2.0
@@ -2856,9 +2856,6 @@ packages:
     resolution: {integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==}
     hasBin: true
 
-  jose@5.4.0:
-    resolution: {integrity: sha512-6rpxTHPAQyWMb9A35BroFl1Sp0ST3DpPcm5EVIxZxdH+e0Hv9fwhyB3XLKFUcHNpdSDnETmBfuPPTTlYz5+USw==}
-
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -4169,6 +4166,9 @@ packages:
 
   smob@1.5.0:
     resolution: {integrity: sha512-g6T+p7QO8npa+/hNx9ohv1E5pVCmWrVCUzUXJyLdMmftX6ER0oiWY/w9knEonLpnOp6b6FenKnMfR8gqwWdwig==}
+
+  snarkdown@2.0.0:
+    resolution: {integrity: sha512-MgL/7k/AZdXCTJiNgrO7chgDqaB9FGM/1Tvlcenenb7div6obaDATzs16JhFyHHBGodHT3B7RzRc5qk8pFhg3A==}
 
   socket.io-client@4.7.5:
     resolution: {integrity: sha512-sJ/tqHOCe7Z50JCBCXrsY3I2k03iOiUe+tj1OmKeD2lXPiGH/RUCdTZFoqVyN7l1MnpIzPrGtLcijffmeouNlQ==}
@@ -8349,8 +8349,6 @@ snapshots:
 
   jiti@1.21.6: {}
 
-  jose@5.4.0: {}
-
   js-tokens@4.0.0: {}
 
   js-tokens@9.0.0: {}
@@ -10159,6 +10157,8 @@ snapshots:
   smart-buffer@4.2.0: {}
 
   smob@1.5.0: {}
+
+  snarkdown@2.0.0: {}
 
   socket.io-client@4.7.5:
     dependencies:
