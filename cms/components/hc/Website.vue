@@ -46,7 +46,7 @@ if (route.path === '/' || route.path === '/admin') {
 
   ready.value = true
 
-  onMounted(async () => {
+  onBeforeMount(async () => {
     await checkAuth()
     await _loadLocale(currentLangCode.value)
   })
