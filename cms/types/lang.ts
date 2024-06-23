@@ -1,7 +1,5 @@
-export * from "./HcErrorCode"
-
 // ISO 639-1 2 letters language codes
-export type LangCode = 'aa' | 'ab' | 'ac' | 'ad' | 'ae' | 'af' | 'ag' | 'ah' | 'ai' | 'aj' | 'ak' | 'al' | 'am' | 'an' | 'ao' | 'ap' | 'aq' | 'ar' | 'as' | 'at' | 'au' | 'av' | 'aw' | 'ax' | 'ay' | 'az' |
+export type HcLangCode = 'aa' | 'ab' | 'ac' | 'ad' | 'ae' | 'af' | 'ag' | 'ah' | 'ai' | 'aj' | 'ak' | 'al' | 'am' | 'an' | 'ao' | 'ap' | 'aq' | 'ar' | 'as' | 'at' | 'au' | 'av' | 'aw' | 'ax' | 'ay' | 'az' |
 'ba' | 'bb' | 'bc' | 'bd' | 'be' | 'bf' | 'bg' | 'bh' | 'bi' | 'bj' | 'bk' | 'bl' | 'bm' | 'bn' | 'bo' | 'bp' | 'bq' | 'br' | 'bs' | 'bt' | 'bu' | 'bv' | 'bw' | 'bx' | 'by' | 'bz' |
 'ca' | 'cb' | 'cc' | 'cd' | 'ce' | 'cf' | 'cg' | 'ch' | 'ci' | 'cj' | 'ck' | 'cl' | 'cm' | 'cn' | 'co' | 'cp' | 'cq' | 'cr' | 'cs' | 'ct' | 'cu' | 'cv' | 'cw' | 'cx' | 'cy' | 'cz' |
 'da' | 'db' | 'dc' | 'dd' | 'de' | 'df' | 'dg' | 'dh' | 'di' | 'dj' | 'dk' | 'dl' | 'dm' | 'dn' | 'do' | 'dp' | 'dq' | 'dr' | 'ds' | 'dt' | 'du' | 'dv' | 'dw' | 'dx' | 'dy' | 'dz' |
@@ -28,129 +26,11 @@ export type LangCode = 'aa' | 'ab' | 'ac' | 'ad' | 'ae' | 'af' | 'ag' | 'ah' | '
 'ya' | 'yb' | 'yc' | 'yd' | 'ye' | 'yf' | 'yg' | 'yh' | 'yi' | 'yj' | 'yk' | 'yl' | 'ym' | 'yn' | 'yo' | 'yp' | 'yq' | 'yr' | 'ys' | 'yt' | 'yu' | 'yv' | 'yw' | 'yx' | 'yy' | 'yz' |
 'za' | 'zb' | 'zc' | 'zd' | 'ze' | 'zf' | 'zg' | 'zh' | 'zi' | 'zj' | 'zk' | 'zl' | 'zm' | 'zn' | 'zo' | 'zp' | 'zq' | 'zr' | 'zs' | 'zt' | 'zu' | 'zv' | 'zw' | 'zx' | 'zy' | 'zz'
 
-export interface Lang {
+export interface HcLang {
   id: number
-  code: LangCode
+  code: HcLangCode
   label: string
   isDefault: boolean
   sort: number
   path: string
-}
-
-export type PageShow = 'always' | 'active' | 'never'
-export type UserRole = 'user' | 'superuser' | 'admin' | 'superadmin'
-export type PageAccess = 'all' | UserRole
-export type I18nField = Record<LangCode, string>
-
-export interface Page {
-  id: number
-  name: string
-  sort: number
-  show: PageShow
-  access: PageAccess
-  lang: string
-  label: string
-  path: string
-  sortedPath: string
-  resolveSlug: string
-}
-
-export interface PageContent {
-  id: number | string
-  blocks: any
-  lastUpdate?: string
-  updated?: string
-  state: string
-  editorVersion: string
-}
-
-export interface PageContents {
-  contents: PageContent[],
-  resolved: any
-}
-
-export interface Tag {
-  id: number
-  label: string
-}
-
-export interface Link {
-  label: string
-  href: string
-}
-
-export interface Teaser {
-  id?: number
-  activeFrom?: string
-  activeUntil?: string
-  tags?: Tag[]
-  title?: string
-  description?: string
-  imageUrl?: string
-  link?: Link
-  displayTargets: Array<{
-    pageId: number
-    slugValue?: string
-  }>
-}
-
-export interface TargetSelectorPage {
-  id?: number
-  name: string
-  isDynamic?: boolean
-  path: string
-}
-
-export interface PageSelectorModel {
-  page?: TargetSelectorPage
-  slugValue?: string
-}
-
-export interface TeaserAdminModel {
-  id?: number
-  activeFrom?: string
-  activeUntil?: string
-  source: Record<LangCode, PageSelectorModel>
-  title: I18nField
-  description: I18nField
-  linkLabel: I18nField
-  imageUrl: I18nField
-  displayTargets: PageSelectorModel[]
-}
-
-export interface TeaserLangRecord {
-  teaser_id: number
-  title: string
-  description: string
-  link_label: string
-  image_url: string
-  lang_id: number
-}
-
-export interface TeaserListItemAdminModel extends TeaserAdminModel {
-  source: Record<LangCode, PageSelectorModel>
-}
-
-
-export type Coords = [number, number]
-
-export interface City {
-  id: number
-  label: string
-  coords: Coords
-  slug: string
-  sponsors: number[]
-}
-
-export type Sponsor = {
-  id: number
-  name: string
-  title?: string
-  isGlobal: boolean
-  bgColor?: string
-}
-
-export type SponsorWithDetail = Sponsor & {
-  content: any[]
-  link?: Link
 }

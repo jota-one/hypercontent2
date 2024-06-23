@@ -7,7 +7,7 @@ interface Modals {
   [modal_id: string]: Modal
 }
 
-export default function() {
+export const useHcModal =() => {
   const modalParams = useState('modalParams', () => ref<any>({}))
   const modals = useState('modals', () => ref<Modals>({}))
 

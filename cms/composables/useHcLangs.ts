@@ -1,14 +1,6 @@
-import type { LangCode } from '../index'
+import type { Lang, LangCode } from '../types/lang'
 
-export interface Lang {
-  id: number
-  code: string
-  label: string
-  isDefault: boolean
-  sort: number
-}
-
-export default function() {
+export const useHcLangs = () => {
   const { hypercontent } = useRuntimeConfig().public
   const route = useRoute()
   const langs = useState('langs', () => ref<Lang[]>([]))

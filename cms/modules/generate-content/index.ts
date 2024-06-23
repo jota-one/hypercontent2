@@ -7,9 +7,10 @@ import {
   type ContentApiEndpointDynamicPageResolver,
 } from '../../common/config'
 import { pascalToKebab, resolveEndpointDefPlaceholders } from '../../common/helpers'
-import type { Page, PageContents, Lang } from '../../index'
+import type { HcPage, HcPageContents } from '../../types/page'
+import type { HcLang } from '../../types/lang'
 
-interface ImportingPage extends Page {
+interface ImportingPage extends HcPage {
   localPath?: string
   localSortedPath?: string
   hasDynamicContent?: boolean
@@ -76,7 +77,7 @@ const fetchEndpoint = async (path: string, query = '') => {
   return { json, url }
 }
 
-const getFrontMatter = (page: Page, apiUrl: string) => {
+const getFrontMatter = (page: HcPage, apiUrl: string) => {
   let ymlContent = `---\n`
 
   if (page.show !== 'always') {
@@ -90,7 +91,7 @@ const getFrontMatter = (page: Page, apiUrl: string) => {
   return ymlContent
 }
 
-const json2mdc = (json: PageContents, dynamicPageEntityDef?: DynamicContentEntityDef) => {
+const json2mdc = (json: HcPageContents, dynamicPageEntityDef?: DynamicContentEntityDef) => {
   const content = json.contents[0]
 
   if (!content) {

@@ -1,6 +1,6 @@
 import { computeLabel } from './i36n'
 
-export default function () {
+export const useHcLabels = () => {
   const { hypercontent } = useRuntimeConfig().public
   const { currentLangCode, defaultLang } = useHcLangs()
   const labels = useState<Record<string, Record<string, string>>>('labels', () => ({}))

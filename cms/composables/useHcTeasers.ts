@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import type { Teaser } from '../index'
+import type { HcTeaser } from '../types/teaser'
 
 export const useHcTeasers = () => {
   const { hypercontent } = useRuntimeConfig().public
@@ -10,7 +10,7 @@ export const useHcTeasers = () => {
     const response = await fetch(`${hypercontent.remoteApi}/teasers?lang_id=${currentLang.value?.id}`)
     const teasers = await response.json()
 
-    return (teasers || []).filter((teaser: Teaser) => {
+    return (teasers || []).filter((teaser: HcTeaser) => {
       const matchesTarget = teaser.displayTargets.some(
         (target: any) =>
           target.pageId === currentPage.value?.id &&

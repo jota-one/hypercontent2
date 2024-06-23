@@ -30,7 +30,7 @@ if (route.path === '/' || route.path === '/admin') {
   const { _loadLangs, currentLangCode } = useHcLangs()
   const { _loadLabels } = useHcLabels()
   const { _loadNavigation } = useHcNavigation()
-  const { _loadLocale } = useHcLocaleDate()
+  const { _loadLocale } = useHcLocalDate()
 
   await _loadLangs()
   await _loadLabels()

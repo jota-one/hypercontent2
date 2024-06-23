@@ -1,7 +1,7 @@
-import type { Coords } from '../index'
+import type { HcCoords } from '../types/location'
 
 export const useHcCoords = () => {
-  const buildCoords = (input: string): Coords => {
+  const buildCoords = (input: string): HcCoords => {
     const [lat, lng] = input.split(',')
 
     if (lat && lng) {

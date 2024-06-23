@@ -1,11 +1,11 @@
-import type { Sponsor, SponsorWithDetail } from '../index'
+import type { HcSponsor, HcSponsorWithDetail } from '../types/sponsor'
 
-export interface Sponsors {
-  [id: number]: Sponsor
+interface Sponsors {
+  [id: number]: HcSponsor
 }
 
-export interface SponsorsWithDetail {
-  [id: number]: SponsorWithDetail
+interface SponsorsWithDetail {
+  [id: number]: HcSponsorWithDetail
 }
 
 interface SponsorResponseItem {

@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-const { currentDayjsLocale, getLocaleDate, loadLocale } = useHcLocaleDate()
+const { currentDayjsLocale, getLocaleDate, loadLocale } = useHcLocalDate()
 
 onMounted(async () => {
   await loadLocale()

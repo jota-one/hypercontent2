@@ -1,7 +1,7 @@
-import type { City } from '../index'
+import type { HcCity } from '../types/city'
 
-export interface Cities {
-  [id: number]: City
+interface Cities {
+  [id: number]: HcCity
 }
 
 interface CityResponseItem {
@@ -18,7 +18,7 @@ export const useHcCities = () => {
   const { buildCoords } = useHcCoords()
 
   const cities = useState('cities', () => ref<Cities>({}))
-  const filteredCities = useState('filteredCities', () => ref<City[]>([]))
+  const filteredCities = useState('filteredCities', () => ref<HcCity[]>([]))
 
   const loadCities = async () => {
     const langCode = currentLangCode.value || defaultLang.value?.code || 'en'

@@ -1,7 +1,7 @@
-import type { Page, PageShow } from '../index'
+import type { HcPage, HcPageShow } from '../types/page'
 
 export interface Pages {
-  [id: string]: Page
+  [id: string]: HcPage
 }
 
 type NavigationItem = {
@@ -9,11 +9,11 @@ type NavigationItem = {
   path: string
   label: string
   sort: number
-  show: PageShow
+  show: HcPageShow
   children?: NavigationItem[]
 }
 
-export default function() {
+export const useHcNavigation = () => {
   const { hypercontent } = useRuntimeConfig().public
   const route = useRoute()
   const { currentLangCode, defaultLang } = useHcLangs()
@@ -39,7 +39,7 @@ export default function() {
       return
     }
 
-    const pageList = _pageList.value?.body as unknown as Page[]
+    const pageList = _pageList.value?.body as unknown as HcPage[]
 
     // Set homepasge
     homePage.value = {
@@ -53,12 +53,12 @@ export default function() {
     }
 
     // Build naviagtion
-    const hasChild = (page: Page, next: Page) =>
+    const hasChild = (page: HcPage, next: HcPage) =>
       next.path !== page.path &&
       next.path.length > page.path.length &&
       next.path.includes(page.path)
 
-    const isFirstLevel = (page: Page) => {
+    const isFirstLevel = (page: HcPage) => {
       // Homepage path is /<lang> => split('/') has length 2
       // => first level pages have path with 2 slashes /<lang>/<page>
       // thus split('/').length = 3
@@ -131,7 +131,7 @@ export default function() {
     )
   }
 
-  const currentPage = computed<Page | undefined>(() => {
+  const currentPage = computed<HcPage | undefined>(() => {
     const staticPage = getPageByPath(route.path)
 
     if (staticPage) {
@@ -141,7 +141,7 @@ export default function() {
     const stripPathDown = (path: string) =>
       path.substring(0, path.lastIndexOf('/')) + '/:'
 
-    const resolveDynamicPage = (path: string, page: Page) => {
+    const resolveDynamicPage = (path: string, page: HcPage) => {
       const match = page.path.match(/:([^/]+)/)
 
       if (

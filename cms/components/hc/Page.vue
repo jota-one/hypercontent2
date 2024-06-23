@@ -4,7 +4,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PageAccess } from '../../index'
+import type { HcPageAccess } from '../../types/page'
 
 const { page } = useContent()
 const { isAuthenticated } = useHcAuth()
@@ -12,7 +12,7 @@ const { isAuthenticated } = useHcAuth()
 const userRole = ref('user')
 
 const accessible = computed(() => {
-  const access = page.value.access as PageAccess
+  const access = page.value.access as HcPageAccess
 
   if (!access || access === 'all') {
     return true

@@ -1,5 +1,4 @@
-import { useStorage } from '@vueuse/core'
-import type { LangCode, UserRole } from "../index"
+import type { HcLangCode } from "../types/lang"
 
 export const useHcAuth = () => {
   const runtimeConfig = useRuntimeConfig().public
@@ -21,7 +20,7 @@ export const useHcAuth = () => {
   const generateResetPasswordLink = async (
     email: string,
     captchaToken: string,
-    langCode: LangCode,
+    langCode: HcLangCode,
   ): Promise<string> => {
     const response = await fetch(`${runtimeConfig.hypercontent.remoteApi}/accounts/passwords/reset-links?lang_code=${langCode}`, {
       method: 'POST',

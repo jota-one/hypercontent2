@@ -21,6 +21,12 @@ export default defineNuxtConfig({
     documentDriven: true,
   },
 
+  imports: {
+    dirs: [
+      'types/**'
+    ]
+  },
+
   modules: [
     '@nuxt/content',
     '@nuxt/image',
