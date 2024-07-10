@@ -30,3 +30,8 @@ export interface HcEvent {
   cancelled: string | null
   attendees: HcEventAttendeesStatus
 }
+
+export interface HcEventUserSubscription {
+  id: number
+  eventId: number
+}
