@@ -1,10 +1,11 @@
-import type { Lang, LangCode } from '../types/lang'
+import type { HcLang, HcLangCode } from '../types/lang'
 
 export const useHcLangs = () => {
+  const langs = useState('hcLangs', () => ref<HcLang[]>([]))
+  const defaultLang = useState('hcDefaultLang', () => ref<HcLang | null>(null))
+
   const { hypercontent } = useRuntimeConfig().public
   const route = useRoute()
-  const langs = useState('langs', () => ref<Lang[]>([]))
-  const defaultLang = useState('defaultLang', () => ref<Lang | null>(null))
 
   const _loadLangs = async () => {
     const hcApiPath = `${hypercontent.content.api.base}${hypercontent.content.api.langs}`
@@ -17,22 +18,22 @@ export const useHcLangs = () => {
     )
 
     if (_langs.value) {
-      langs.value = _langs.value?.body as unknown as Lang[]
+      langs.value = _langs.value?.body as unknown as HcLang[]
     }
 
-    const defaultLangItem = langs.value.find((lang: Lang) => lang.isDefault)
+    const defaultLangItem = langs.value.find((lang: HcLang) => lang.isDefault)
 
     if (defaultLangItem) {
       defaultLang.value = defaultLangItem
     }
   }
 
-  const langCodes = computed(() => langs.value.map((lang: Lang) => lang.code))
-  const currentLangCode = computed<LangCode>(() => route.path.split('/')[1] as LangCode)
+  const langCodes = computed(() => langs.value.map((lang: HcLang) => lang.code))
+  const currentLangCode = computed<HcLangCode>(() => route.path.split('/')[1] as HcLangCode)
 
   const currentLang = computed(() => {
     return (
-      langs.value.find((lang: Lang) => lang.code === currentLangCode.value) ||
+      langs.value.find((lang: HcLang) => lang.code === currentLangCode.value) ||
       defaultLang.value
     )
   })

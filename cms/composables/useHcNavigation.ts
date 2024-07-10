@@ -14,13 +14,13 @@ type NavigationItem = {
 }
 
 export const useHcNavigation = () => {
+  const homePage = useState('hcHomePage', () => ref<NavigationItem | null>(null))
+  const navigation = useState('hcNavigation', () => ref<NavigationItem[]>([]))
+  const pages = useState('hcPages', () => ref<Pages>({}))
+
   const { hypercontent } = useRuntimeConfig().public
   const route = useRoute()
   const { currentLangCode, defaultLang } = useHcLangs()
-
-  const homePage = useState('homePage', () => ref<NavigationItem | null>(null))
-  const navigation = useState('navigation', () => ref<NavigationItem[]>([]))
-  const pages = useState('pages', () => ref<Pages>({}))
 
   const _loadNavigation = async () => {
     const langCode = currentLangCode.value || defaultLang.value?.code || 'en'

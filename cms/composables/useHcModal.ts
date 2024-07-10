@@ -8,8 +8,8 @@ interface Modals {
 }
 
 export const useHcModal =() => {
-  const modalParams = useState('modalParams', () => ref<any>({}))
-  const modals = useState('modals', () => ref<Modals>({}))
+  const modalParams = useState('hcModalParams', () => ref<any>({}))
+  const modals = useState('hcModals', () => ref<Modals>({}))
 
   const registerModal = (id: string) => {
     if (!modals.value[id]) {

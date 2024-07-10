@@ -12,7 +12,7 @@ type $Label = ComputedRef<(
     _params: Record<string, string>,
     _lang?: string | null,
     _markdown?: boolean
-  ) => string | string[])
+  ) => string | string[] | undefined)
   | ((key: string) => string | string[] | undefined
 )>
 
@@ -38,9 +38,11 @@ const _key = (labels: Labels, language: string, key: string) => {
     return label.map((item, index) => {
       const placeholders = extractPlaceholders(item)
       let plh = ''
+
       if (placeholders.length > 0) {
         plh = ', [' + placeholders.join(',') + ']'
       }
+
       return `{${key}[${index}]${plh}}`
     })
   }
@@ -61,6 +63,7 @@ const _format = (value: string, params: Record<string, string>, source: Record<s
   if (Array.isArray(value)) {
     return value.map(v => mdFn(replace(v, params, source)))
   }
+
   return mdFn(replace(value, params, source))
 }
 

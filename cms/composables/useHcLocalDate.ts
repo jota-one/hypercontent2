@@ -3,9 +3,10 @@ import type { HcLangCode } from '../types/lang'
 import 'dayjs/locale/ur'
 
 export const useHcLocalDate = () => {
+  const dayjsLocales = useState('hcDayjsLocales', () => ref<Partial<Record<HcLangCode, any>>>({}))
+  const currentDayjsLocale = useState('hcCurrentDayjsLocale', () => ref<any>())
+
   const { currentLangCode } = useHcLangs()
-  const dayjsLocales = useState('dayjsLocales', () => ref<Partial<Record<HcLangCode, any>>>({}))
-  const currentDayjsLocale = useState('currentDayjsLocale', () => ref<any>())
 
   const _loadLocale = async (langCode?: HcLangCode): Promise<any> => {
     const code: HcLangCode = langCode || currentLangCode.value

@@ -27,13 +27,13 @@ interface SponsorWithDetailResponseItem {
 }
 
 export const useHcSponsors = () => {
-  const { hypercontent } = useRuntimeConfig().public
-  const { currentLangCode, defaultLang } = useHcLangs()
-
-  const sponsors = useState('sponsors', () => ref<Sponsors>({}))
-  const sponsorsWithDetail = useState('sponsorsWithDetail', () =>
+  const sponsors = useState('hcSponsors', () => ref<Sponsors>({}))
+  const sponsorsWithDetail = useState('hcSponsorsWithDetail', () =>
     ref<SponsorsWithDetail>({}),
   )
+
+  const { hypercontent } = useRuntimeConfig().public
+  const { currentLangCode, defaultLang } = useHcLangs()
 
   const loadSponsors = async () => {
     const langCode = currentLangCode.value || defaultLang.value?.code || 'en'

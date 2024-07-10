@@ -13,12 +13,12 @@ interface CityResponseItem {
 }
 
 export const useHcCities = () => {
+  const cities = useState('hcCities', () => ref<Cities>({}))
+  const filteredCities = useState('hcFilteredCities', () => ref<HcCity[]>([]))
+
   const { hypercontent } = useRuntimeConfig().public
   const { currentLangCode, defaultLang } = useHcLangs()
   const { buildCoords } = useHcCoords()
-
-  const cities = useState('cities', () => ref<Cities>({}))
-  const filteredCities = useState('filteredCities', () => ref<HcCity[]>([]))
 
   const loadCities = async () => {
     const langCode = currentLangCode.value || defaultLang.value?.code || 'en'

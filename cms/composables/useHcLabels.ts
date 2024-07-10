@@ -1,9 +1,11 @@
 import { computeLabel } from './i36n'
 
 export const useHcLabels = () => {
+  const labels = useState<Record<string, Record<string, string>>>('hcLabels', () => ({}))
+
   const { hypercontent } = useRuntimeConfig().public
   const { currentLangCode, defaultLang } = useHcLangs()
-  const labels = useState<Record<string, Record<string, string>>>('labels', () => ({}))
+
   const langCode = computed(() => currentLangCode.value || defaultLang.value?.code || 'en')
 
   const _loadLabels = async () => {
