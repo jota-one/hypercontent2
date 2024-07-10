@@ -1,20 +1,39 @@
 import type { HcLangCode } from "../types/lang"
+import type { HcUserRole } from "../types/user"
 
 export const useHcAuth = () => {
+  const isAuthenticated = useState('hcIsAuthenticated', () => false)
+  const userRole = useState<HcUserRole | null>('hcUserRole', () => null)
+
   const runtimeConfig = useRuntimeConfig().public
   const { $localStorage } = useNuxtApp()
-  const isAuthenticated = useState('isAuthenticated', () => false)
+
+  const getToken = () => $localStorage.getItem(runtimeConfig.hypercontent.jwt.token.name) || ''
+
+  const fetchUser = async () => {
+    const response = await fetch(`${runtimeConfig.hypercontent.remoteApi}/auth/user`, {
+      headers: {
+        'authorization': `Bearer ${getToken()}`
+      }
+    })
+
+    const responseBody = await response.json()
+    userRole.value = responseBody.role
+  }
 
   const checkAuth = async () => {
-    const token = $localStorage.getItem(runtimeConfig.hypercontent.jwt.token.name) || ''
     const response = await fetch(`${runtimeConfig.hypercontent.remoteApi}/auth/check`, {
       method: 'HEAD',
       headers: {
-        'authorization': `Bearer ${token}`
+        'authorization': `Bearer ${getToken()}`
       }
     })
 
     isAuthenticated.value = response.status === 200
+
+    if (isAuthenticated.value) {
+      await fetchUser()
+    }
   }
 
   const generateResetPasswordLink = async (
@@ -47,6 +66,7 @@ export const useHcAuth = () => {
     if (response.status === 200) {
       $localStorage.setItem(runtimeConfig.hypercontent.jwt.token.name, responseBody.token)
       isAuthenticated.value = true
+      await fetchUser()
     } else {
       throw new Error(responseBody.message)
     }
@@ -60,7 +80,9 @@ export const useHcAuth = () => {
     const responseBody = await response.json()
 
     if (response.status === 200) {
+      $localStorage.removeItem(runtimeConfig.hypercontent.jwt.token.name)
       isAuthenticated.value = false
+      userRole.value = null
     } else {
       throw new Error(responseBody.message)
     }
@@ -68,8 +90,10 @@ export const useHcAuth = () => {
 
   return {
     isAuthenticated,
+    userRole,
     checkAuth,
     generateResetPasswordLink,
+    getToken,
     login,
     logout,
   }
