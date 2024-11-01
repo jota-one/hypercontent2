@@ -45,7 +45,7 @@ interface DynamicContentEntityDef {
 type DynamicPageResolvers = Record<string, DynamicPageResolver>
 
 const DYNAMIC_ENTITY_PLACEHOLDER_PATTERN = /:(\w+)\.(\w+)/gim
-const PATH_CHECK_PATTERN = /[\/:\.a-z0-9-_]+/gm
+const PATH_CHECK_PATTERN = /[/:.a-z0-9-_]+/gm
 
 export const config: Config = {
   apiBasePath: ['_hc', 'api'],
@@ -282,7 +282,7 @@ const buildPages = async (
       (_, g1, g2) => `__${g1}.${g2}__`
     )
 
-    let { json: content, url: pageApiUrl } = await fetchEndpoint(
+    const endpoint = await fetchEndpoint(
       resolveEndpointDefPlaceholders(HC_ENDPOINTS.content.detail.path, {
         page,
       }),
@@ -290,6 +290,8 @@ const buildPages = async (
         lang,
       })
     )
+    let content = endpoint.json
+    const pageApiUrl = endpoint.url
 
     if (page.entity) {
       // Replace entity props in content, e.g. :city.label => lausanne

@@ -1,7 +1,7 @@
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 
-import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
+import { fileURLToPath } from 'url'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 
@@ -22,9 +22,7 @@ export default defineNuxtConfig({
   },
 
   imports: {
-    dirs: [
-      'types/**'
-    ]
+    dirs: ['types/**'],
   },
 
   modules: [
@@ -44,9 +42,9 @@ export default defineNuxtConfig({
             labels: '__langCode__:labels.json',
             langs: 'langs.json',
             navigation: '__langCode__:navigation.json',
-          }
+          },
         },
-      }
+      },
     },
   },
 

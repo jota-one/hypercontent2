@@ -1,8 +1,8 @@
-import type { HcI18nField } from "./content"
-import type { HcLangCode } from "./lang"
-import type { HcLink } from "./link"
-import type { HcPageSelectorModel } from "./page"
-import type { HcTag } from "./tag"
+import type { HcI18nField } from './content'
+import type { HcLangCode } from './lang'
+import type { HcLink } from './link'
+import type { HcPageSelectorModel } from './page'
+import type { HcTag } from './tag'
 
 export interface HcTeaser {
   id?: number

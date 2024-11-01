@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 export enum HcErrorCode {
   ERROR_HC_USER_ACTIVATION_TOKEN_EXPIRED,
   ERROR_HC_USER_ALREADY_EXISTS,

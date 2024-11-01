@@ -7,8 +7,8 @@ export default defineNuxtConfig({
     generateContent: {
       enabled: false,
       apiBaseUrl,
-      contentRootFolder: './.playground/content'
-    }
+      contentRootFolder: './.playground/content',
+    },
   },
 
   runtimeConfig: {
@@ -20,7 +20,7 @@ export default defineNuxtConfig({
             name: '',
           },
         },
-      }
-    }
-  }
+      },
+    },
+  },
 })

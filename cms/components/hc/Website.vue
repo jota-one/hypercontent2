@@ -1,5 +1,5 @@
 <template>
-  <slot v-if="ready"/>
+  <slot v-if="ready" />
   <div v-else>
     <ContentNavigation v-slot="{ navigation }">
       <ul>
@@ -36,7 +36,7 @@ if (route.path === '/' || route.path === '/admin') {
   await _loadLabels()
   await _loadNavigation()
 
-  for (const loader of (props.loaders || [])) {
+  for (const loader of props.loaders || []) {
     if (typeof loader === 'function') {
       await loader()
     } else {

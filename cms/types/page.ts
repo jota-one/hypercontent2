@@ -1,4 +1,4 @@
-import type { HcUserRole } from "./user"
+import type { HcUserRole } from './user'
 
 export type HcPageShow = 'always' | 'active' | 'never'
 export type HcPageAccess = 'all' | HcUserRole
@@ -26,7 +26,7 @@ export interface HcPageContent {
 }
 
 export interface HcPageContents {
-  contents: HcPageContent[],
+  contents: HcPageContent[]
   resolved: any
 }
 

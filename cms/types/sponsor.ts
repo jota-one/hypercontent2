@@ -1,4 +1,4 @@
-import type { HcLink } from "./link"
+import type { HcLink } from './link'
 
 export type HcSponsor = {
   id: number

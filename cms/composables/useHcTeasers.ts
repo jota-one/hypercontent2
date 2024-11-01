@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+
 import type { HcTeaser } from '../types/teaser'
 
 export const useHcTeasers = () => {
@@ -7,7 +8,9 @@ export const useHcTeasers = () => {
   const { currentPage } = useHcNavigation()
 
   const getTeasers = async () => {
-    const response = await fetch(`${hypercontent.remoteApi}/teasers?lang_id=${currentLang.value?.id}`)
+    const response = await fetch(
+      `${hypercontent.remoteApi}/teasers?lang_id=${currentLang.value?.id}`
+    )
     const teasers = await response.json()
 
     return (teasers || []).filter((teaser: HcTeaser) => {
@@ -17,15 +20,13 @@ export const useHcTeasers = () => {
           (target.slugValue
             ? target.slugValue ===
               (currentPage.value?.resolveSlug || '=').split('=')[1]
-            : true),
+            : true)
       )
       const matchesTime =
         (teaser.activeFrom
           ? dayjs(teaser.activeFrom).isBefore(dayjs())
           : true) &&
-        (teaser.activeUntil
-          ? dayjs(teaser.activeUntil).isAfter(dayjs())
-          : true)
+        (teaser.activeUntil ? dayjs(teaser.activeUntil).isAfter(dayjs()) : true)
 
       return matchesTarget && matchesTime
     })

@@ -1,4 +1,4 @@
-import type { HcCoords } from "./location"
+import type { HcCoords } from './location'
 
 export interface HcCity {
   id: number

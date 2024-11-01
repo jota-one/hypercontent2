@@ -1,4 +1,4 @@
-export * from "../HcErrorCode"
+export * from '../HcErrorCode'
 export * as city from './city'
 export * as content from './content'
 export * as event from './event'

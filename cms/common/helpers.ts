@@ -21,7 +21,7 @@ export function pascalToKebab(input: string) {
 }
 
 export function kebabToPascal(input: string) {
-  return input.replace(/_(\w)/gmi, (_, g1) => g1.toUpperCase())
+  return input.replace(/_(\w)/gim, (_, g1) => g1.toUpperCase())
 }
 
 export function resolveEndpointDefPlaceholders(pathOrParams: any, values = {}) {
@@ -31,7 +31,7 @@ export function resolveEndpointDefPlaceholders(pathOrParams: any, values = {}) {
     for (const placeholder of placeholders) {
       input = input.replaceAll(
         placeholder,
-        get(values, placeholder.replace(/^{(.*)}$/gim, '$1'), ''),
+        get(values, placeholder.replace(/^{(.*)}$/gim, '$1'), '')
       )
     }
 

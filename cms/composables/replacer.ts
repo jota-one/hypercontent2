@@ -4,7 +4,9 @@ export const getReplacer = (pattern: RegExp) => {
       return ''
     }
 
-    const params = maps.reverse().reduce((acc: any[], map: any[]) => ({ ...acc, ...map }))
+    const params = maps
+      .reverse()
+      .reduce((acc: any[], map: any[]) => ({ ...acc, ...map }))
 
     return str.replace(pattern, function (term, key) {
       return params[key] !== undefined ? params[key] : term
@@ -19,8 +21,8 @@ export const getExtractor = (pattern: RegExp) => {
     }
 
     let match
-    let result = []
-    while (match = pattern.exec(str)) {
+    const result = []
+    while ((match = pattern.exec(str))) {
       result.push(match[1])
     }
 
@@ -28,6 +30,6 @@ export const getExtractor = (pattern: RegExp) => {
   }
 }
 
-export const replace = getReplacer(/{([^{}]+)}/gmi)
-export const extractPlaceholders = getExtractor(/{([^{}]+)}/gmi)
+export const replace = getReplacer(/{([^{}]+)}/gim)
+export const extractPlaceholders = getExtractor(/{([^{}]+)}/gim)
 export const replaceExpress = getReplacer(/:(\w+)/g)

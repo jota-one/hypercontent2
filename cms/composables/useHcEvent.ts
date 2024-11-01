@@ -1,12 +1,13 @@
-import type { HcEvent } from '../types/event'
 import dayjs from 'dayjs'
+
+import type { HcEvent } from '../types/event'
 
 export const useHcEvent = () => {
   const isFull = (event: HcEvent) =>
     event.subscriptions.currentCount >= event.subscriptions.max
 
-  const canSubscribe = (event: HcEvent) => !dayjs(event.subscriptions.starting).isAfter(Date.now()) &&
-  !isFull(event)
+  const canSubscribe = (event: HcEvent) =>
+    !dayjs(event.subscriptions.starting).isAfter(Date.now()) && !isFull(event)
 
   const eventMatchesCities = () => {}
   const eventMatchesTags = () => {}
@@ -27,6 +28,6 @@ export const useHcEvent = () => {
     loadEvent,
     loadEventAttendees,
     subscribeToEvent,
-    unsubscribeFromEvent
+    unsubscribeFromEvent,
   }
 }

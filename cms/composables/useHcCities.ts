@@ -26,7 +26,7 @@ export const useHcCities = () => {
     const { data: _citiesList } = await useAsyncData('_cities', () =>
       queryContent()
         .where({ _partial: true, _id: `content:${hcApiPath}` })
-        .findOne(),
+        .findOne()
     )
 
     const citiesList = _citiesList.value?.body as unknown as CityResponseItem[]

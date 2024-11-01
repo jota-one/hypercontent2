@@ -1,8 +1,14 @@
-import type { HcEventUserSubscription } from "../types/event"
+import type { HcEventUserSubscription } from '../types/event'
 
 export const useHcEvents = () => {
-  const subscribedEvents = useState<HcEventUserSubscription[]>('hcSubscribedEvents', () => [])
-  const subscribedEventsLoaded = useState('hcSubscribedEventsLoaded', () => false)
+  const subscribedEvents = useState<HcEventUserSubscription[]>(
+    'hcSubscribedEvents',
+    () => []
+  )
+  const subscribedEventsLoaded = useState(
+    'hcSubscribedEventsLoaded',
+    () => false
+  )
 
   const { isAuthenticated, getToken } = useHcAuth()
   const runtimeConfig = useRuntimeConfig().public
@@ -14,11 +20,14 @@ export const useHcEvents = () => {
   const loadAllEventsTags = async () => {}
 
   const loadSubscriptions = async () => {
-    const response = await fetch(`${runtimeConfig.hypercontent.remoteApi}/events/subscriptions`, {
-      headers: {
-        'authorization': `Bearer ${getToken()}`
+    const response = await fetch(
+      `${runtimeConfig.hypercontent.remoteApi}/events/subscriptions`,
+      {
+        headers: {
+          authorization: `Bearer ${getToken()}`,
+        },
       }
-    })
+    )
 
     const responseBody = await response.json()
     subscribedEvents.value = responseBody.subscriptions
@@ -35,16 +44,20 @@ export const useHcEvents = () => {
   const eventsDateRangeSpan = ref()
   const filteredTags = ref()
 
-  watch(isAuthenticated, async _isAuthenticated => {
-    if (!_isAuthenticated) {
-      subscribedEvents.value = []
-    }
+  watch(
+    isAuthenticated,
+    async _isAuthenticated => {
+      if (!_isAuthenticated) {
+        subscribedEvents.value = []
+      }
 
-    if (_isAuthenticated && !subscribedEventsLoaded.value) {
-      await loadSubscriptions()
-      subscribedEventsLoaded.value = true
-    }
-  }, {immediate: true})
+      if (_isAuthenticated && !subscribedEventsLoaded.value) {
+        await loadSubscriptions()
+        subscribedEventsLoaded.value = true
+      }
+    },
+    { immediate: true }
+  )
 
   return {
     allEventsCities,

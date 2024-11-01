@@ -14,7 +14,9 @@ type NavigationItem = {
 }
 
 export const useHcNavigation = () => {
-  const homePage = useState('hcHomePage', () => ref<NavigationItem | null>(null))
+  const homePage = useState('hcHomePage', () =>
+    ref<NavigationItem | null>(null)
+  )
   const navigation = useState('hcNavigation', () => ref<NavigationItem[]>([]))
   const pages = useState('hcPages', () => ref<Pages>({}))
 
@@ -26,9 +28,8 @@ export const useHcNavigation = () => {
     const langCode = currentLangCode.value || defaultLang.value?.code || 'en'
     const hcApiPath = `${hypercontent.content.api.base}${hypercontent.content.api.navigation.replace('__langCode__', langCode)}`
 
-    const { data: _pageList } = await useAsyncData(
-      '_navigation',
-      () => queryContent()
+    const { data: _pageList } = await useAsyncData('_navigation', () =>
+      queryContent()
         .where({ _partial: true, _id: `content:${hcApiPath}` })
         .findOne()
     )
@@ -88,7 +89,7 @@ export const useHcNavigation = () => {
           path: page.path,
           label: page.label,
           sort: page.sort,
-          show: page.show
+          show: page.show,
         })
       } else {
         _navigation.push({
@@ -96,7 +97,7 @@ export const useHcNavigation = () => {
           path: page.path,
           label: page.label,
           sort: page.sort,
-          show: page.show
+          show: page.show,
         })
       }
 
@@ -106,10 +107,12 @@ export const useHcNavigation = () => {
           path: page.path,
           label: page.label,
           sort: page.sort,
-          show: page.show
+          show: page.show,
         }
 
-        const parentIndex = _navigation.findIndex(n => n.pageId === parent?.pageId)
+        const parentIndex = _navigation.findIndex(
+          n => n.pageId === parent?.pageId
+        )
         _navigation[parentIndex] = parent
       }
     }
@@ -121,14 +124,12 @@ export const useHcNavigation = () => {
     const stripTrailingSlash = (path: string) => path.replace(/(.*)\/$/, '$1')
 
     return Object.values(pages.value).find(
-      page => stripTrailingSlash(page.path || '') === stripTrailingSlash(path),
+      page => stripTrailingSlash(page.path || '') === stripTrailingSlash(path)
     )
   }
 
   const getPageByName = (name: string) => {
-    return Object.values(pages.value).find(
-      page => page.name === name
-    )
+    return Object.values(pages.value).find(page => page.name === name)
   }
 
   const currentPage = computed<HcPage | undefined>(() => {

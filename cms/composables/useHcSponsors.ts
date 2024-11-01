@@ -29,7 +29,7 @@ interface SponsorWithDetailResponseItem {
 export const useHcSponsors = () => {
   const sponsors = useState('hcSponsors', () => ref<Sponsors>({}))
   const sponsorsWithDetail = useState('hcSponsorsWithDetail', () =>
-    ref<SponsorsWithDetail>({}),
+    ref<SponsorsWithDetail>({})
   )
 
   const { hypercontent } = useRuntimeConfig().public
@@ -41,7 +41,7 @@ export const useHcSponsors = () => {
     const { data: _sponsorsList } = await useAsyncData('_sponsors', () =>
       queryContent()
         .where({ _partial: true, _id: `content:${hcApiPath}` })
-        .findOne(),
+        .findOne()
     )
 
     const sponsorsList = _sponsorsList.value
@@ -63,7 +63,7 @@ export const useHcSponsors = () => {
     const { data: _sponsorsList } = await useAsyncData('_sponsorsDetail', () =>
       queryContent()
         .where({ _partial: true, _id: `content:${hcApiPath}` })
-        .findOne(),
+        .findOne()
     )
 
     const sponsorsList = _sponsorsList.value

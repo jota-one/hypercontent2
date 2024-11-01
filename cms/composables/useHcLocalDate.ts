@@ -1,9 +1,13 @@
-import dayjs, { Dayjs } from 'dayjs'
-import type { HcLangCode } from '../types/lang'
 import 'dayjs/locale/ur'
 
+import dayjs, { Dayjs } from 'dayjs'
+
+import type { HcLangCode } from '../types/lang'
+
 export const useHcLocalDate = () => {
-  const dayjsLocales = useState('hcDayjsLocales', () => ref<Partial<Record<HcLangCode, any>>>({}))
+  const dayjsLocales = useState('hcDayjsLocales', () =>
+    ref<Partial<Record<HcLangCode, any>>>({})
+  )
   const currentDayjsLocale = useState('hcCurrentDayjsLocale', () => ref<any>())
 
   const { currentLangCode } = useHcLangs()
@@ -76,11 +80,14 @@ export const useHcLocalDate = () => {
 
   const getLocaleDate = (date: Dayjs | Date) => {
     if (!currentDayjsLocale.value) {
-      throw new Error('Dayjs locale is not set. Please call _loadDateLocale() first.')
+      throw new Error(
+        'Dayjs locale is not set. Please call _loadDateLocale() first.'
+      )
     }
 
-    // eslint-disable-next-line import/no-named-as-default-member
-    return (dayjs.isDayjs(date) ? date : dayjs(date)).locale(currentDayjsLocale.value)
+    return (dayjs.isDayjs(date) ? date : dayjs(date)).locale(
+      currentDayjsLocale.value
+    )
   }
 
   return { currentDayjsLocale, dayjsLocales, getLocaleDate, _loadLocale }

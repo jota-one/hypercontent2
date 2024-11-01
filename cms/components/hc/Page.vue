@@ -1,6 +1,6 @@
 <template>
-  <slot v-if="accessible"/>
-  <slot name="restricted-access" v-else/>
+  <slot v-if="accessible" />
+  <slot v-else name="restricted-access" />
 </template>
 
 <script setup lang="ts">

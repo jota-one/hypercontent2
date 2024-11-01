@@ -10,9 +10,8 @@ export const useHcLangs = () => {
   const _loadLangs = async () => {
     const hcApiPath = `${hypercontent.content.api.base}${hypercontent.content.api.langs}`
 
-    const { data: _langs } = await useAsyncData(
-      '_langs',
-      () => queryContent()
+    const { data: _langs } = await useAsyncData('_langs', () =>
+      queryContent()
         .where({ _partial: true, _id: `content:${hcApiPath}` })
         .findOne()
     )
@@ -29,7 +28,9 @@ export const useHcLangs = () => {
   }
 
   const langCodes = computed(() => langs.value.map((lang: HcLang) => lang.code))
-  const currentLangCode = computed<HcLangCode>(() => route.path.split('/')[1] as HcLangCode)
+  const currentLangCode = computed<HcLangCode>(
+    () => route.path.split('/')[1] as HcLangCode
+  )
 
   const currentLang = computed(() => {
     return (

@@ -1,9 +1,12 @@
-migrate((db) => {
-  const snapshot = [];
+migrate(
+  db => {
+    const snapshot = []
 
-  const collections = snapshot.map((item) => new Collection(item));
+    const collections = snapshot.map(item => new Collection(item))
 
-  return Dao(db).importCollections(collections, true, null);
-}, (db) => {
-  return null;
-})
+    return Dao(db).importCollections(collections, true, null)
+  },
+  db => {
+    return null
+  }
+)

@@ -7,7 +7,7 @@ interface Modals {
   [modal_id: string]: Modal
 }
 
-export const useHcModal =() => {
+export const useHcModal = () => {
   const modalParams = useState('hcModalParams', () => ref<any>({}))
   const modals = useState('hcModals', () => ref<Modals>({}))
 
@@ -39,7 +39,7 @@ export const useHcModal =() => {
       () =>
         Object.entries(modals.value)
           .filter(([, { open }]) => open)
-          .map(([id]) => id)[0],
+          .map(([id]) => id)[0]
     ),
     modalParams,
   }

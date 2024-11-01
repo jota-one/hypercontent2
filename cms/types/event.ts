@@ -1,5 +1,5 @@
-import type { HcCoords } from "./location"
-import type { HcTag } from "./tag"
+import type { HcCoords } from './location'
+import type { HcTag } from './tag'
 
 export interface HcEventLocation {
   label: string

@@ -18,8 +18,8 @@ export default defineNuxtPlugin(() => {
           if (import.meta.client && localStorage) {
             return localStorage.setItem(item, value)
           }
-        }
-      }
-    }
+        },
+      },
+    },
   }
 })

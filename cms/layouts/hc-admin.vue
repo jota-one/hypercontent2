@@ -2,7 +2,7 @@
   <ClientOnly>
     <div class="layout admin">
       Admin layout
-      <slot/>
+      <slot />
     </div>
   </ClientOnly>
 </template>

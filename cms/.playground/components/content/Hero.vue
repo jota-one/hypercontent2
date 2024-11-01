@@ -1,7 +1,7 @@
 <template>
   <div class="hero">
-    Hero<br>
-    locale date: {{ localeDate }}<br>
+    Hero<br />
+    locale date: {{ localeDate }}<br />
   </div>
 </template>
 
