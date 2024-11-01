@@ -1,19 +1,16 @@
 {
-  "internal": {
-    "tables": ["users", "configs"]
-  },
-  "cms": {
+  "base": {
     "tables": [
       "HcConfigs",
+      "HcContents",
       "HcLabels",
       "HcLangs",
+      "HcNavigation",
       "HcPages",
-      "HcContents",
+      "HcPagesLang",
       "HcTeasers",
       "HcTeasersTargets",
-      "HcTeasersLang",
-      "HcPagesLang",
-      "HcNavigation"
+      "HcTeasersLang"
     ]
   },
   "users": {
