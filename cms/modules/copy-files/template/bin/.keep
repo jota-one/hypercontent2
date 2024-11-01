@@ -1,0 +1,2 @@
+Put the "task" executable here for local use.
+To install it run `sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d` from the repo root.
