@@ -1,0 +1,10 @@
+{
+  "extends": ["../hypercontent/cms"],
+  "config": {
+    "hypercontent": {
+      "generateContent": {
+        "enabled": false
+      }
+    }
+  }
+}

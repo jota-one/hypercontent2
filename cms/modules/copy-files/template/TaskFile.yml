@@ -5,4 +5,6 @@ tasks:
     cmds:
       - bin/db-bootstrap.sh
       - mv pb/_pb_migrations pb/pb_migrations
-      - npm run db
+      - npm run db &
+      - node bin/update-nuxt-config.cjs
+      - npm run dev

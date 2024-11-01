@@ -375,6 +375,8 @@ const generateContent = async ({
     console.info(`Generating content from ${apiBaseUrl} into "${into}"...`)
   }
 
+  return
+
   // Cleanup
   await rm(join(...config.contentBasePath), { recursive: true, force: true })
 

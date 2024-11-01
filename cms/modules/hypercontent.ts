@@ -2,12 +2,18 @@ import { readFile, writeFile } from 'node:fs/promises'
 import { join as joinPaths } from 'node:path'
 
 import { defineNuxtModule } from '@nuxt/kit'
+import type { Nuxt } from '@nuxt/schema'
 
 import type { ContentApiEndpointDef } from '../common/config'
 import copyFiles from './copy-files'
 import generateContentModule, { config } from './generate-content'
+import setConfigs from './set-configs'
 
 export interface ModuleOptions {
+  copyFiles: {
+    enabled?: boolean
+    dest?: string
+  }
   generateContent: {
     /**
      * If set to true, hypercontent will generate md files in your
@@ -42,6 +48,9 @@ export interface ModuleOptions {
      */
     customContentApiEndpoints?: Record<string, ContentApiEndpointDef>
   }
+  setConfigs: {
+    enabled?: boolean
+  }
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -55,6 +64,7 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: {
     copyFiles: {
       enabled: false,
+      dest: '',
     },
     generateContent: {
       enabled: false,
@@ -63,14 +73,29 @@ export default defineNuxtModule<ModuleOptions>({
       excludeLabelKeyPrefixes: [],
       customContentApiEndpoints: {},
     },
+    setConfigs: {
+      enabled: false,
+    },
   },
-  setup(options: any, nuxt: any) {
+  setup(options: ModuleOptions, nuxt: Nuxt) {
     nuxt.hook('ready', async () => {
       if (options.copyFiles.enabled) {
-        const { run } = copyFiles()
-        await run({
-          dest: '.',
-        })
+        const { dest } = options.copyFiles
+
+        if (dest) {
+          const { run } = copyFiles()
+          await run({
+            dest,
+          })
+        }
+      }
+      if (options.setConfigs.enabled) {
+        // const { dest } = options.setConfigs
+
+        //if (dest) {
+        const { run } = setConfigs()
+        await run()
+        //}
       }
       if (options.generateContent.enabled) {
         const {

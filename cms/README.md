@@ -1,3 +1,61 @@
+# Hypercontent Layer
+This nuxt layer aims to be used with a new Nuxt app.
+It will supercharge it into a hybrid statically generated
+wesbite based on nuxt content v2.
+
+Why hybrid? Because it allows you to define which part of your
+site should be static and which should remain dynamic. The
+dynamic part is supported by a pocketbase database.
+
+## Setup
+1. Create a normal nuxt app next to the `hypercontent` directory
+   using the standard nuxi command.
+   `npx nuxi@latest init <project-name>`
+2. Register hypercontent into your project. The hypercontent
+   directory should be in the same directory as your project.
+   Update your `nuxt.config.ts` to something like the following.
+
+```ts
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  extends: [
+    '../hypercontent/cms'
+  ],
+
+  devtools: { enabled: true },
+
+  routeRules: {
+    '/': { prerender: true }
+  },
+
+  compatibilityDate: '2024-10-27',
+  hypercontent: {
+    copyFiles: {
+      enabled: true,
+      dest: __dirname
+    },
+    setConfigs: {
+      enabled: true
+    }
+  }
+})
+```
+3. Run `npm run dev`
+
+You'll notice that a couple of files were added to your project.
+That's due to the `copyFiles` command of hypercontent. Your
+project now has a pocketbase database and a task runner.
+On top of that, the installer also updated your package.json
+with some commands and new useful dependencies.
+
+4. Stop the server (type ctrl + c) in the terminal.
+5. Run again `npm i` to install the new dependencies.
+6. Run `bin/task bootstrap` (if it doesn't work, ensure that
+   the `task` file in bin directory is executable).
+
+Now your database is bootstrapped with a couple of data and 
+can be reached in the browser (check the console for the URL).
+
 # Nuxt Layer Starter
 
 Create Nuxt extendable layer with this GitHub template.
