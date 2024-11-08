@@ -131,7 +131,7 @@ export default defineNuxtModule<ModuleOptions>({
         'langs.json'
       )
       const langs = JSON.parse(await readFile(langsFile, 'utf8'))
-      const defaultLang = langs.find((lang: any) => lang.is_default).code
+      const defaultLang = langs.find((lang: any) => lang.isDefault).code
       const homeHtmlContent = `<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=/${defaultLang}"/></html>`
 
       await writeFile(homeHtmlFile, homeHtmlContent, 'utf8')

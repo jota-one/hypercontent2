@@ -39,8 +39,11 @@ const resolveSlot = (slot?: Slot<any>) => {
         (acc: Record<string, any>, [key, value]) => {
           if (typeof value === 'object') {
             if (Array.isArray(value)) {
-              // TODO implement array props resolving
-              console.warn('Array props resolving is not implemented!')
+              acc[key] = value.map(resolveProps)
+              // TODO test!!!
+              console.warn(
+                'Array props resolving is not implemented! Well it is, but not tested...'
+              )
             } else {
               acc[key] = resolveProps(value)
             }

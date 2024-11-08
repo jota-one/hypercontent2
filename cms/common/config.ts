@@ -22,8 +22,8 @@ export const HC_ENDPOINTS = {
   },
   content: {
     detail: {
-      path: '/contents/{page.id}',
-      queryParams: { lang_id: '{lang.id}', resolve_slug: '{resolvedSlug}' },
+      path: '/collections/HcPagesLang/records?expand=Content&filter=(id = "{page.id}")',
+      // queryParams: { lang_id: '{lang.id}', resolve_slug: '{resolvedSlug}' },
     },
   },
   event: {
@@ -37,10 +37,10 @@ export const HC_ENDPOINTS = {
     },
   },
   label: {
-    list: { path: '/labels/{lang.code}' },
+    list: { path: '/collections/HcLabels/records?filter=(Lang="{lang.id}")' },
   },
   lang: {
-    list: { path: '/settings' },
+    list: { path: '/collections/HcLangs/records' },
   },
   location: {
     list: {
@@ -54,8 +54,7 @@ export const HC_ENDPOINTS = {
   },
   navigation: {
     list: {
-      path: '/navigation',
-      queryParams: { lang_id: '{lang.id}', static: 'true' },
+      path: '/collections/HcNavigation/records?filter=(langCode="{lang.code}")',
     },
   },
   teaser: {

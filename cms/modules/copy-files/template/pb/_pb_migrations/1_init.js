@@ -819,7 +819,43 @@ migrate(db => {
       deleteRule: null,
       options: {
         query:
-          "WITH RECURSIVE Navigation AS (\n  SELECT\n    p.id AS id,\n    p.name,\n    p.sort,\n    p.show,\n    p.resolveSlug,\n    pl.Lang,\n    pl.label,\n    l.code AS langCode,\n    ('/' || l.code) AS path,\n    ('/' || l.code) AS sortedPath\n  FROM HcPages AS p\n    JOIN HcPagesLang AS pl ON pl.Page = p.id\n    JOIN HcLangs AS l ON l.id = pl.Lang\n    WHERE p.Parent = '' AND l.active = TRUE\n  UNION\n  SELECT\n    p.id AS id,\n    p.name,\n    p.sort,\n    p.show,\n    p.resolveSlug,\n    pl.Lang,\n    pl.label,\n    l.code AS langCode,\n    (n.path || '/' || pl.slug) AS path,\n    (n.path || '/' || (p.sort + 1) || '.' || pl.slug) AS sortedPath\n  FROM HcPages AS p\n\tJOIN Navigation AS n ON p.Parent = n.id\n    JOIN HcPagesLang As pl ON pl.Page = p.id\n    JOIN HcLangs As l ON l.id = pl.Lang\n   WHERE pl.Lang = n.Lang\n)\nSELECT id, name, sort, show, resolveSlug, Lang AS lang, langCode, path, sortedPath FROM Navigation ORDER BY Lang, path;",
+          'WITH RECURSIVE Navigation AS (\n' +
+          '  SELECT\n' +
+          '    pl.id as id,\n' +
+          '    p.id AS pid,\n' +
+          '    p.name,\n' +
+          '    p.sort,\n' +
+          '    p.show,\n' +
+          '    p.resolveSlug,\n' +
+          '    pl.Lang,\n' +
+          '    pl.label,\n' +
+          '    l.code AS langCode,\n' +
+          "    ('/' || l.code) AS path,\n" +
+          "    ('/' || l.code) AS sortedPath\n" +
+          '  FROM HcPages AS p\n' +
+          '    JOIN HcPagesLang AS pl ON pl.Page = p.id\n' +
+          '    JOIN HcLangs AS l ON l.id = pl.Lang\n' +
+          "    WHERE p.Parent = '' AND l.active = TRUE\n" +
+          '  UNION\n' +
+          '  SELECT\n' +
+          '    pl.id as id,\n' +
+          '    p.id AS pid,\n' +
+          '    p.name,\n' +
+          '    p.sort,\n' +
+          '    p.show,\n' +
+          '    p.resolveSlug,\n' +
+          '    pl.Lang,\n' +
+          '    pl.label,\n' +
+          '    l.code AS langCode,\n' +
+          "    (n.path || '/' || pl.slug) AS path,\n" +
+          "    (n.path || '/' || (p.sort + 1) || '.' || pl.slug) AS sortedPath\n" +
+          '  FROM HcPages AS p\n' +
+          '\tJOIN Navigation AS n ON p.Parent = n.pid\n' +
+          '    JOIN HcPagesLang As pl ON pl.Page = p.id\n' +
+          '    JOIN HcLangs As l ON l.id = pl.Lang\n' +
+          '   WHERE pl.Lang = n.Lang\n' +
+          ')\n' +
+          'SELECT id, name, label, sort, show, resolveSlug, Lang AS lang, langCode, path, sortedPath FROM Navigation ORDER BY lang, path;',
       },
     },
   ]
@@ -871,7 +907,17 @@ migrate(db => {
   dao.saveRecord(enLang)
 
   const homeFrContent = new Record(HcContents, {
-    blocks: JSON.stringify([]),
+    blocks: JSON.stringify([
+      {
+        id: 'tnAEGFJEcx',
+        type: 'BlockTitle',
+        data: {
+          props: {
+            text: 'Accueil',
+          },
+        },
+      },
+    ]),
     state: 'published',
     editorVersion: '2.26.5',
     name: '',
@@ -885,7 +931,116 @@ migrate(db => {
   })
   dao.saveRecord(homeEnContent)
   const contactFrContent = new Record(HcContents, {
-    blocks: JSON.stringify([]),
+    blocks: JSON.stringify([
+      {
+        id: 'axBTmiGid_',
+        type: 'BlockTitle',
+        data: {
+          props: {
+            text: 'Contactez-nous!',
+          },
+        },
+      },
+      {
+        id: '8TEwye1FJB',
+        type: 'paragraph',
+        children: [
+          {
+            text: "Pour participer à l'événement, pensez à consulter [votre partenaire](https://www.jota.one).\n\nVous pouvez directement joindre Jorinho ou Tadai pour toutes questions sur Jota.",
+          },
+        ],
+      },
+      {
+        id: 'DiWvCP6i76',
+        type: 'AddressBlock',
+        data: {
+          props: {
+            person: {
+              firstName: 'Juniors',
+              lastName: 'Jota',
+              title: 'Chief Architects',
+              street: 'Inifinite Loop π',
+              zip: 9999,
+              city: 'Magic City',
+              phone: '+41 (0) 79 123 45 67',
+              email: 'juniors@jota.one',
+            },
+          },
+        },
+      },
+      {
+        id: 'a83NvChRog',
+        type: 'BlockSpace',
+        data: {
+          props: {
+            size: 'half',
+          },
+        },
+      },
+      {
+        id: 'LEnB2vS5Kp',
+        type: 'BlockTitle',
+        data: {
+          props: {
+            text: 'Qui sommes-nous ?',
+          },
+        },
+      },
+      {
+        id: 'wA7veeaJsM',
+        type: 'paragraph',
+        children: [
+          {
+            text: "Ce texte pourrait être généré par une IA, mais je sais encore écrire du bulk texte inutile si besoin. Donc je le fais avant que le monde décide que perdre 5 minutes à écrire du texte de remplissage est plus dommageable que construire des datacenters qui consomment autant que des villes pour qu'un bot abruti génère ce texte à notre place.",
+          },
+        ],
+      },
+      {
+        id: 'xZXUqFaNTM',
+        type: 'paragraph',
+        children: [
+          {
+            text: "Avec tout ça, je n'ai pas présenté l'entreprise, mais on se fait déjà une vague idée de notre vision en lisant le paragraphe ci-dessus, non?",
+          },
+        ],
+      },
+      {
+        id: 'nR7cRoncoL',
+        type: 'BlockSpace',
+        data: {
+          props: {
+            size: 'half',
+          },
+        },
+      },
+      {
+        id: 'mBpixTX7_i',
+        type: 'BlockTitle',
+        data: {
+          props: {
+            text: 'Buts',
+          },
+        },
+      },
+      {
+        id: '74duZSCIWA',
+        type: 'paragraph',
+        children: [
+          {
+            text: "Le but c'est surtout de continuer de produire des trucs intéressants et originaux alors que le monde sombre dans l'uniformité des LLM.",
+          },
+        ],
+      },
+      {
+        id: 'iz1ESzGfiK',
+        type: 'paragraph',
+        children: [
+          {
+            text: 'Le vrai auteur de cette lithanie\n\n**Jorinho**',
+          },
+        ],
+      },
+    ]),
     state: 'published',
     editorVersion: '2.26.5',
     name: '',
@@ -931,4 +1086,152 @@ migrate(db => {
     Content: contactEnContent.id,
   })
   dao.saveRecord(contactPageEn)
+
+  const sql =
+    'INSERT INTO `HcLabels` (`key`, `Lang`, `value`) VALUES\n' +
+    "('common_login', '" +
+    frLang.id +
+    "', 'Connexion'),\n" +
+    "('common_login', '" +
+    enLang.id +
+    "', 'Login'),\n" +
+    "('common_logout', '" +
+    frLang.id +
+    "', 'Déconnexion'),\n" +
+    "('common_logout', '" +
+    enLang.id +
+    "', 'Logout'),\n" +
+    "('common_page_not_found', '" +
+    frLang.id +
+    "', 'Page introuvable'),\n" +
+    "('common_page_not_found', '" +
+    enLang.id +
+    "', 'Page not found'),\n" +
+    "('common_edit', '" +
+    frLang.id +
+    "', 'Editer'),\n" +
+    "('common_edit', '" +
+    enLang.id +
+    "', 'Edit'),\n" +
+    "('common_modify', '" +
+    frLang.id +
+    "', 'Modifier'),\n" +
+    "('common_modify', '" +
+    enLang.id +
+    "', 'Modify'),\n" +
+    "('common_save', '" +
+    frLang.id +
+    "', 'Sauvegarder'),\n" +
+    "('common_save', '" +
+    enLang.id +
+    "', 'Save'),\n" +
+    "('common_cancel', '" +
+    frLang.id +
+    "', 'Annuler'),\n" +
+    "('common_cancel', '" +
+    enLang.id +
+    "', 'Cancel'),\n" +
+    "('common_confirm', '" +
+    frLang.id +
+    "', 'Confirmer'),\n" +
+    "('common_confirm', '" +
+    enLang.id +
+    "', 'Confirm'),\n" +
+    "('common_yes', '" +
+    frLang.id +
+    "', 'Oui'),\n" +
+    "('common_yes', '" +
+    enLang.id +
+    "', 'Yes'),\n" +
+    "('common_no', '" +
+    frLang.id +
+    "', 'Non'),\n" +
+    "('common_no', '" +
+    enLang.id +
+    "', 'No'),\n" +
+    "('common_enabled', '" +
+    frLang.id +
+    "', 'Activé(s)'),\n" +
+    "('common_enabled', '" +
+    enLang.id +
+    "', 'Enabled'),\n" +
+    "('common_disabled', '" +
+    frLang.id +
+    "', 'Désactivé(s)'),\n" +
+    "('common_disabled', '" +
+    enLang.id +
+    "', 'Disabled'),\n" +
+    "('common_close', '" +
+    frLang.id +
+    "', 'Fermer'),\n" +
+    "('common_close', '" +
+    enLang.id +
+    "', 'Close'),\n" +
+    "('common_notfound', '" +
+    frLang.id +
+    "', 'Introuvable'),\n" +
+    "('common_notfound', '" +
+    enLang.id +
+    "', 'Not found'),\n" +
+    "('common_untranslated', '" +
+    frLang.id +
+    "', 'Non traduit'),\n" +
+    "('common_untranslated', '" +
+    enLang.id +
+    "', 'Untranslated'),\n" +
+    "('editor_not_ready_for_save', '" +
+    frLang.id +
+    "', 'L''éditeur n''est pas prêt pour la sauvegarde'),\n" +
+    "('editor_not_ready_for_save', '" +
+    enLang.id +
+    "', 'Editor is not ready for saving data'),\n" +
+    "('editor_init_placeholder', '" +
+    frLang.id +
+    "', 'Cliquer ici pour ajouter du contenu...'),\n" +
+    "('editor_init_placeholder', '" +
+    enLang.id +
+    "', 'Click here to start writing content...'),\n" +
+    "('hc_common_create', '" +
+    frLang.id +
+    "', 'Créer'),\n" +
+    "('hc_common_create', '" +
+    enLang.id +
+    "', 'Create'),\n" +
+    "('hc_common_export', '" +
+    frLang.id +
+    "', 'Exporter'),\n" +
+    "('hc_common_export', '" +
+    enLang.id +
+    "', 'Export'),\n" +
+    "('hc_search_entities', '" +
+    frLang.id +
+    "', 'Rechercher des {entities}'),\n" +
+    "('hc_search_entities', '" +
+    enLang.id +
+    "', 'Search {entities}'),\n" +
+    "('hc_common_import', '" +
+    frLang.id +
+    "', 'Importer'),\n" +
+    "('hc_common_import', '" +
+    enLang.id +
+    "', 'Import'),\n" +
+    "('hc_common_merge', '" +
+    frLang.id +
+    "', 'Fusionner'),\n" +
+    "('hc_common_merge', '" +
+    enLang.id +
+    "', 'Merge'),\n" +
+    "('hc_users', '" +
+    frLang.id +
+    "', 'Utilisateurs'),\n" +
+    "('hc_users', '" +
+    enLang.id +
+    "', 'Users'),\n" +
+    "('hc_error_pending_user_not_found', '" +
+    frLang.id +
+    "', 'Aucun utilisateur en attente trouvé'),\n" +
+    "('hc_error_pending_user_not_found', '" +
+    enLang.id +
+    "', 'No pending user found');"
+  db.newQuery(sql).execute()
 })

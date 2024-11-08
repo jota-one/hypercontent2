@@ -11,7 +11,7 @@ import {
   resolveEndpointDefPlaceholders,
 } from '../../common/helpers'
 import type { HcLang } from '../../types/lang'
-import type { HcPage, HcPageContents } from '../../types/page'
+import type { HcPage, HcPageBlock, HcPageContent } from '../../types/page'
 
 interface ImportingPage extends HcPage {
   localPath?: string
@@ -43,6 +43,11 @@ interface DynamicContentEntityDef {
 }
 
 type DynamicPageResolvers = Record<string, DynamicPageResolver>
+
+type BlockProcessorConfig = {
+  block: HcPageBlock
+  depth: number
+}
 
 const DYNAMIC_ENTITY_PLACEHOLDER_PATTERN = /:(\w+)\.(\w+)/gim
 const PATH_CHECK_PATTERN = /[/:.a-z0-9-_]+/gm
@@ -87,19 +92,87 @@ const getFrontMatter = (page: HcPage, apiUrl: string) => {
     ymlContent += `navigation: false\n`
   }
 
-  ymlContent += `access: ${page.access}\n`
+  ymlContent += `access: ${page.access || 'all'}\n`
   ymlContent += `apiUrl: ${apiUrl}\n`
   ymlContent += `---\n\n`
 
   return ymlContent
 }
 
+const isInlineComponent = (block: HcPageBlock) =>
+  !block.children || block.children.length === 0
+
+const mdComponentName = (block: HcPageBlock, depth: number) => {
+  const prefix = isInlineComponent(block) ? ':' : ''.padEnd(depth + 2, ':')
+  return `${prefix}${pascalToKebab(block.type as string)}`
+}
+
+const indent = (depth: number) => {
+  return ''.padStart(depth, '  ')
+}
+
+const isBooleanOrNumber = (value: string) =>
+  typeof value !== 'object' &&
+  (['true', 'false'].includes(value.toString().toLowerCase()) ||
+    !isNaN(parseInt(value)))
+
+const processBlockProps = (block: HcPageBlock) => {
+  const componentProps = []
+  const props = block.data?.props || {}
+  for (const [key, value] of Object.entries(props)) {
+    let componentProp = ''
+
+    // Prefix prop with : in case of object (incl. array)
+    componentProp += typeof value === 'object' ? ':' : ''
+
+    // Append prop key
+    if (isBooleanOrNumber(value as string)) {
+      componentProp += `:${key}=${value}`
+    } else {
+      componentProp += `${key}=`
+      // Open value quotes
+      // => object (incl. array) need to be wrapped inside single quotes (')
+      // while primitives are wrapped with double quotes (")
+      componentProp += typeof value === 'object' ? `'` : `"`
+      // Append prop value
+      componentProp += typeof value === 'object' ? JSON.stringify(value) : value
+      // Close value quotes
+      componentProp += typeof value === 'object' ? `'` : `"`
+    }
+
+    componentProps.push(componentProp)
+  }
+
+  return componentProps.length ? `{${componentProps.join(' ')}}` : ''
+}
+
+const processBlock = ({ block, depth }: BlockProcessorConfig) => {
+  // raw text (or html or markdown)
+  if (block.type === undefined && block.text) {
+    return [block.text]
+  }
+
+  const componentName = mdComponentName(block, depth)
+  const propsPart = processBlockProps(block)
+  const indentation = indent(depth)
+
+  let lines = [`${indentation}${componentName}${propsPart}`]
+  if (!isInlineComponent(block)) {
+    lines = lines.concat(
+      (block.children || []).flatMap(childBlock =>
+        processBlock({ block: childBlock, depth: depth + 1 })
+      )
+    )
+    lines.push(indentation + ''.padEnd(depth + 2, ':'))
+  }
+
+  return lines
+}
+
 const json2mdc = (
-  json: HcPageContents,
+  content: HcPageContent,
   dynamicPageEntityDef?: DynamicContentEntityDef
 ) => {
-  const content = json.contents[0]
-
   if (!content) {
     return
   }
@@ -108,67 +181,24 @@ const json2mdc = (
     return
   }
 
-  let mdContent = ''
-  const blocks = JSON.parse(content.blocks)
-
-  const isBooleanOrNumber = (value: string) =>
-    typeof value !== 'object' &&
-    (['true', 'false'].includes(value.toString().toLowerCase()) ||
-      !isNaN(parseInt(value)))
+  let mdContentLines: string[] = []
 
   if (dynamicPageEntityDef) {
-    mdContent += `::hc-dynamic-content{entity="${dynamicPageEntityDef.name}" field="${dynamicPageEntityDef.field}"}\n`
+    mdContentLines.push(
+      `::hc-dynamic-content{entity="${dynamicPageEntityDef.name}" field="${dynamicPageEntityDef.field}"}`
+    )
   }
 
-  for (const block of blocks) {
-    if (block.type === 'paragraph') {
-      mdContent += `::block-p\n${block.data?.text}\n::\n`
-    } else {
-      const componentName = `:${pascalToKebab(block.type)}`
-
-      const componentProps = []
-      const props = block.data?.props || {}
-
-      for (const [key, value] of Object.entries(props)) {
-        let componentProp = ''
-
-        // Prefix prop with : in case of object (incl. array)
-        componentProp += typeof value === 'object' ? ':' : ''
-
-        // Append prop key
-        if (isBooleanOrNumber(value as string)) {
-          componentProp += `:${key}=${value}`
-        } else {
-          componentProp += `${key}=`
-          // Open value quotes
-          // => object (incl. array) need to be wrapped inside single quotes (')
-          // while primitives are wrapped with double quotes (")
-          componentProp += typeof value === 'object' ? `'` : `"`
-          // Append prop value
-          componentProp +=
-            typeof value === 'object' ? JSON.stringify(value) : value
-          // Close value quotes
-          componentProp += typeof value === 'object' ? `'` : `"`
-        }
-
-        componentProps.push(componentProp)
-      }
-
-      mdContent += `${componentName}`
-
-      if (componentProps.length) {
-        mdContent += `{${componentProps.join(' ')}}`
-      }
-
-      mdContent += `\n`
-    }
+  const depth = 0
+  for (const block of content.blocks) {
+    mdContentLines = mdContentLines.concat(processBlock({ block, depth }))
   }
 
   if (dynamicPageEntityDef) {
-    mdContent += '::'
+    mdContentLines.push('::')
   }
 
-  return mdContent
+  return mdContentLines.join('\n')
 }
 
 const resolveInputWithEntity = (
@@ -224,7 +254,7 @@ const buildPages = async (
       // Push static page in pages array
       pages.push(page)
     } else {
-      // Resolve dynamic page and push result (entites in the response)
+      // Resolve dynamic page and push result (entities in the response)
       // as static pages in the array
       const { name: entityName } = getEntityDefFromPath(page.path)
 
@@ -256,8 +286,6 @@ const buildPages = async (
         for (const entity of entities) {
           pages.push(resolvePageWithEntity(page, entity))
         }
-
-        continue
       } else {
         // If no resolver found, push the page as static template page
         pages.push(page)
@@ -285,12 +313,9 @@ const buildPages = async (
     const endpoint = await fetchEndpoint(
       resolveEndpointDefPlaceholders(HC_ENDPOINTS.content.detail.path, {
         page,
-      }),
-      resolveEndpointDefPlaceholders(HC_ENDPOINTS.content.detail.queryParams, {
-        lang,
       })
     )
-    let content = endpoint.json
+    let content = endpoint.json.items[0].expand.Content
     const pageApiUrl = endpoint.url
 
     if (page.entity) {
@@ -325,14 +350,13 @@ const buildPages = async (
 
     let mdContent
 
-    if (page.hasDynamicContent) {
-      const dynamicPageEntityDef = getEntityDefFromPath(page.path)
-      mdContent =
-        getFrontMatter(page, pageApiUrl) +
-        json2mdc(content, dynamicPageEntityDef)
-    } else {
-      mdContent = getFrontMatter(page, pageApiUrl) + json2mdc(content)
-    }
+    console.log(page)
+    mdContent =
+      getFrontMatter(page, pageApiUrl) +
+      json2mdc(
+        content,
+        (page.hasDynamicContent && getEntityDefFromPath(page.path)) || undefined
+      )
 
     // Write page on disk
     if (mdContent) {
@@ -375,13 +399,11 @@ const generateContent = async ({
     console.info(`Generating content from ${apiBaseUrl} into "${into}"...`)
   }
 
-  return
-
   // Cleanup
   await rm(join(...config.contentBasePath), { recursive: true, force: true })
 
   // Fetch and dump langs
-  const langs = (await fetchEndpoint(HC_ENDPOINTS.lang.list.path)).json.langs
+  const langs = (await fetchEndpoint(HC_ENDPOINTS.lang.list.path)).json.items
   await dumpJson(langs, join(...config.apiBasePath.concat(['langs'])))
 
   let pageLinks: string[] = []
@@ -394,14 +416,18 @@ const generateContent = async ({
     })
 
     // Labels
-    const { json: labels } = await fetchEndpoint(
-      resolveEndpointDefPlaceholders(HC_ENDPOINTS.label.list.path, { lang })
-    )
+    const labels = (
+      await fetchEndpoint(
+        resolveEndpointDefPlaceholders(HC_ENDPOINTS.label.list.path, { lang })
+      )
+    ).json.items
 
-    const filteredLabels = Object.entries(labels).reduce(
-      (acc: any, [key, value]) => {
-        if (!_excludeLabelKeyPrefixes.some(prefix => key.startsWith(prefix))) {
-          acc[key] = value
+    const filteredLabels = Object.values(labels).reduce(
+      (acc: any, item: any) => {
+        if (
+          !_excludeLabelKeyPrefixes.some(prefix => item.key.startsWith(prefix))
+        ) {
+          acc[item.key] = item.value
         }
 
         return acc
@@ -415,14 +441,13 @@ const generateContent = async ({
     )
 
     // Navigation
-    const { json: navigation } = await fetchEndpoint(
-      resolveEndpointDefPlaceholders(HC_ENDPOINTS.navigation.list.path, {
-        lang,
-      }),
-      resolveEndpointDefPlaceholders(HC_ENDPOINTS.navigation.list.queryParams, {
-        lang,
-      })
-    )
+    const navigation = (
+      await fetchEndpoint(
+        resolveEndpointDefPlaceholders(HC_ENDPOINTS.navigation.list.path, {
+          lang,
+        })
+      )
+    ).json.items
 
     await dumpJson(
       navigation,
@@ -431,45 +456,45 @@ const generateContent = async ({
 
     // Custom content api endpoints
     const dynamicPageResolvers: DynamicPageResolvers = {}
-    if (customContentApiEndpoints) {
-      for (const [name, endpointDef] of Object.entries(
-        customContentApiEndpoints
-      )) {
-        const nameCheckPattern = /[a-zA-Z0-9-_]+/gm
-        const nameCheck = name.match(nameCheckPattern)
-
-        if (nameCheck === null || nameCheck[0] !== name) {
-          throw new Error(
-            `customContentApiEndpoint name ${name} contains invalid character(s) => name check pattern: ${nameCheckPattern}`
-          )
-        }
-
-        const { json } = await fetchEndpoint(
-          resolveEndpointDefPlaceholders(endpointDef.path, { lang }),
-          resolveEndpointDefPlaceholders(endpointDef.queryParams, { lang })
-        )
-
-        await dumpJson(
-          json,
-          join(...config.apiBasePath.concat([lang.code, name]))
-        )
-
-        const resolver = endpointDef.dynamicPageResolver
-
-        if (resolver) {
-          dynamicPageResolvers[resolver.entityName] = {
-            endpoint: {
-              path: endpointDef.path,
-              ...(endpointDef.queryParams
-                ? { queryParams: endpointDef.queryParams }
-                : {}),
-            },
-            response: json,
-            resolve: resolver.resolve,
-          }
-        }
-      }
-    }
+    // if (customContentApiEndpoints) {
+    //   for (const [name, endpointDef] of Object.entries(
+    //     customContentApiEndpoints
+    //   )) {
+    //     const nameCheckPattern = /[a-zA-Z0-9-_]+/gm
+    //     const nameCheck = name.match(nameCheckPattern)
+    //
+    //     if (nameCheck === null || nameCheck[0] !== name) {
+    //       throw new Error(
+    //         `customContentApiEndpoint name ${name} contains invalid character(s) => name check pattern: ${nameCheckPattern}`
+    //       )
+    //     }
+    //
+    //     const { json } = await fetchEndpoint(
+    //       resolveEndpointDefPlaceholders(endpointDef.path, { lang }),
+    //       resolveEndpointDefPlaceholders(endpointDef.queryParams, { lang })
+    //     )
+    //
+    //     await dumpJson(
+    //       json,
+    //       join(...config.apiBasePath.concat([lang.code, name]))
+    //     )
+    //
+    //     const resolver = endpointDef.dynamicPageResolver
+    //
+    //     if (resolver) {
+    //       dynamicPageResolvers[resolver.entityName] = {
+    //         endpoint: {
+    //           path: endpointDef.path,
+    //           ...(endpointDef.queryParams
+    //             ? { queryParams: endpointDef.queryParams }
+    //             : {}),
+    //         },
+    //         response: json,
+    //         resolve: resolver.resolve,
+    //       }
+    //     }
+    //   }
+    // }
 
     // Pages
     const pages = await buildPages(navigation, lang, dynamicPageResolvers)

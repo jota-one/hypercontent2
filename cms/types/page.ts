@@ -16,9 +16,22 @@ export interface HcPage {
   resolveSlug: string
 }
 
+export interface HcPageBlockData {
+  props?: Record<string, any>
+  text?: string
+}
+
+export interface HcPageBlock {
+  id?: string
+  type?: string
+  data: HcPageBlockData
+  children?: HcPageBlock[]
+  text?: string
+}
+
 export interface HcPageContent {
   id: number | string
-  blocks: any
+  blocks: HcPageBlock[]
   lastUpdate?: string
   updated?: string
   state: string

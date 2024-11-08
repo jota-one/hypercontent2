@@ -3,7 +3,8 @@
   "config": {
     "hypercontent": {
       "generateContent": {
-        "enabled": false
+        "enabled": false,
+        "api": "http://127.0.0.1:8090/api"
       }
     }
   }

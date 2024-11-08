@@ -40,7 +40,7 @@ export default defineNuxtConfig({
   }
 })
 ```
-3. Run `npm run dev`
+3. Run `npm run prepare`
 
 You'll notice that a couple of files were added to your project.
 That's due to the `copyFiles` command of hypercontent. Your
@@ -48,9 +48,8 @@ project now has a pocketbase database and a task runner.
 On top of that, the installer also updated your package.json
 with some commands and new useful dependencies.
 
-4. Stop the server (type ctrl + c) in the terminal.
-5. Run again `npm i` to install the new dependencies.
-6. Run `bin/task bootstrap` (if it doesn't work, ensure that
+4. Run again `npm i` to install the new dependencies.
+5. Run `bin/task bootstrap` (if it doesn't work, ensure that
    the `task` file in bin directory is executable).
 
 Now your database is bootstrapped with a couple of data and 
