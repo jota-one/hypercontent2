@@ -348,10 +348,7 @@ const buildPages = async (
       ? (page.localSortedPath += '/0.index')
       : page.localSortedPath
 
-    let mdContent
-
-    console.log(page)
-    mdContent =
+    const mdContent =
       getFrontMatter(page, pageApiUrl) +
       json2mdc(
         content,
