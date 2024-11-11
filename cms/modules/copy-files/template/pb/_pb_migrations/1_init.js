@@ -967,6 +967,32 @@ migrate(db => {
             },
           },
         },
+        children: [
+          {
+            id: 'lalala',
+            type: 'BlockTitle',
+            data: {
+              props: {
+                text: 'Du contenu!!',
+              },
+            },
+          },
+          {
+            id: 'lalaolo',
+            type: 'BlockImage',
+            data: {
+              props: {
+                src: 'https://images.unsplash.com/photo-1730871082254-65b6e151c82b?q=80&w=400',
+                alt: 'Une belle photo',
+              },
+            },
+            children: [
+              {
+                text: "J'aime **mon** visage.",
+              },
+            ],
+          },
+        ],
       },
       {
         id: 'a83NvChRog',
@@ -1058,7 +1084,7 @@ migrate(db => {
     Page: homePage.id,
     Lang: frLang.id,
     slug: '',
-    label: 'Hypercontent - Accueil',
+    label: 'Accueil',
     Content: homeFrContent.id,
   })
   dao.saveRecord(homePageFr)
@@ -1066,7 +1092,7 @@ migrate(db => {
     Page: homePage.id,
     Lang: enLang.id,
     slug: '',
-    label: 'Hypercontent - Welcome',
+    label: 'Welcome',
     Content: homeEnContent.id,
   })
   dao.saveRecord(homePageEn)
@@ -1074,7 +1100,7 @@ migrate(db => {
     Page: contactPage.id,
     Lang: frLang.id,
     slug: 'contactez-nous',
-    label: 'Hypercontent - Contactez-nous!',
+    label: 'Contactez-nous!',
     Content: contactFrContent.id,
   })
   dao.saveRecord(contactPageFr)
@@ -1082,7 +1108,7 @@ migrate(db => {
     Page: contactPage.id,
     Lang: enLang.id,
     slug: 'contact-us',
-    label: 'Hypercontent - Contact us!',
+    label: 'Contact us!',
     Content: contactEnContent.id,
   })
   dao.saveRecord(contactPageEn)

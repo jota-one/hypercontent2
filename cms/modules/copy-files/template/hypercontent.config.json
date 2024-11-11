@@ -7,5 +7,17 @@
         "api": "http://127.0.0.1:8090/api"
       }
     }
+  },
+  "runtimeConfig": {
+    "public": {
+      "hypercontent": {
+        "remoteApi": "http://127.0.0.1:8090/api",
+        "jwt": {
+          "token": {
+            "name": ""
+          }
+        }
+      }
+    }
   }
 }

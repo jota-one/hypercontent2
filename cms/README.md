@@ -40,7 +40,7 @@ export default defineNuxtConfig({
   }
 })
 ```
-3. Run `npm run prepare`
+3. Run `npm run postinstall`
 
 You'll notice that a couple of files were added to your project.
 That's due to the `copyFiles` command of hypercontent. Your

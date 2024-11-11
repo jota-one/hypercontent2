@@ -509,7 +509,7 @@ const generateContent = async ({
 
   // Build homepage
   await dumpFile(pageLinks.join(`\n`), 'index', 'md')
-  console.info('Content generation done!')
+  console.info('🎉 Content generation done!')
 }
 
 export default () => ({ generateContent })
