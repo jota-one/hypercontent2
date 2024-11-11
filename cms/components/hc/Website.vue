@@ -1,14 +1,5 @@
 <template>
   <slot v-if="ready" />
-  <div v-else>
-    <ContentNavigation v-slot="{ navigation }">
-      <ul>
-        <li v-for="link of navigation" :key="link._path">
-          <NuxtLink :to="link._path">{{ link.title }}</NuxtLink>
-        </li>
-      </ul>
-    </ContentNavigation>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -29,12 +20,12 @@ if (route.path === '/' || route.path === '/admin') {
   const { checkAuth } = useHcAuth()
   const { _loadLangs, currentLangCode } = useHcLangs()
   const { _loadLabels } = useHcLabels()
-  const { _loadNavigation } = useHcNavigation()
+  // const { _loadNavigation, navigation } = useHcNavigation()
   const { _loadLocale } = useHcLocalDate()
 
   await _loadLangs()
   await _loadLabels()
-  await _loadNavigation()
+  // await _loadNavigation()
 
   for (const loader of props.loaders || []) {
     if (typeof loader === 'function') {

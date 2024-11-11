@@ -90,6 +90,9 @@ const getFrontMatter = (page: HcPage, apiUrl: string) => {
 
   if (page.show !== 'always') {
     ymlContent += `navigation: false\n`
+  } else {
+    ymlContent += `navigation:\n`
+    ymlContent += `  title: ${page.label}\n\n`
   }
 
   ymlContent += `access: ${page.access || 'all'}\n`
@@ -445,11 +448,11 @@ const generateContent = async ({
         })
       )
     ).json.items
-
-    await dumpJson(
-      navigation,
-      join(...config.apiBasePath.concat([lang.code, 'navigation']))
-    )
+    //
+    // await dumpJson(
+    //   navigation,
+    //   join(...config.apiBasePath.concat([lang.code, 'navigation']))
+    // )
 
     // Custom content api endpoints
     const dynamicPageResolvers: DynamicPageResolvers = {}
