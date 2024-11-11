@@ -15,7 +15,7 @@ const extractNavigation = (navigation: NavItem[]) => {
 
 <template>
   <ContentNavigation v-slot="{ navigation }" :query="navQuery">
-    <ul>
+    <ul class="flex items-center space-x-2">
       <li
         v-for="link of extractNavigation(navigation)"
         :key="link._path"

@@ -888,6 +888,15 @@ migrate(db => {
     Parent: homePage.id,
   })
   dao.saveRecord(contactPage)
+  const aboutPage = new Record(HcPages, {
+    name: 'about',
+    sort: 5,
+    show: 'always',
+    resolveSlug: false,
+    active: true,
+    Parent: homePage.id,
+  })
+  dao.saveRecord(aboutPage)
 
   const frLang = new Record(HcLangs, {
     code: 'fr',
@@ -1079,6 +1088,118 @@ migrate(db => {
     name: '',
   })
   dao.saveRecord(contactEnContent)
+  const aboutFrContent = new Record(HcContents, {
+    blocks: JSON.stringify([
+      {
+        id: 'apropo423',
+        type: 'BlockTitle',
+        data: {
+          props: {
+            text: 'A propos de nous',
+          },
+        },
+      },
+      {
+        id: 'arow1',
+        type: 'Row',
+        data: {
+          props: {
+            columns: 3,
+          },
+        },
+        children: [
+          {
+            id: 'col42423',
+            type: 'Column',
+            children: [
+              {
+                id: 'titojojo',
+                type: 'BlockTitle',
+                data: {
+                  props: {
+                    text: 'Jorinho',
+                  },
+                },
+              },
+              {
+                id: 'paparagrphpa',
+                type: 'Paragraph',
+                children: [
+                  {
+                    text: "Un être d'exception qui saura vous faire vibrer par sa simple présence scénique. Le problème c'est qu'il ne monte pas sur scène.",
+                  },
+                ],
+              },
+              {
+                id: 'a83NvChRog',
+                type: 'BlockSpace',
+                data: {
+                  props: {
+                    size: 'half',
+                  },
+                },
+              },
+              {
+                id: 'tatadjoj',
+                type: 'BlockTitle',
+                data: {
+                  props: {
+                    text: 'Tadai',
+                  },
+                },
+              },
+              {
+                id: 'paparagrphpa2',
+                type: 'Paragraph',
+                children: [
+                  {
+                    text: "La polyvalence incarnée. Il sait tout faire. Malheureusement il n'a pas le temps.",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: 'col4243323',
+            type: 'Column',
+            data: {
+              props: {
+                span: 2,
+              },
+            },
+            children: [
+              {
+                id: 'lalaolo',
+                type: 'BlockImage',
+                data: {
+                  props: {
+                    src: 'https://images.unsplash.com/photo-1730871082254-65b6e151c82b?q=80&w=400',
+                    alt: 'Une belle photo',
+                  },
+                },
+                children: [
+                  {
+                    text: 'Là, ils sont en plein travail.',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ]),
+    state: 'published',
+    editorVersion: '2.26.5',
+    name: '',
+  })
+  dao.saveRecord(aboutFrContent)
+  const aboutEnContent = new Record(HcContents, {
+    blocks: JSON.stringify([]),
+    state: 'published',
+    editorVersion: '2.26.5',
+    name: '',
+  })
+  dao.saveRecord(aboutEnContent)
 
   const homePageFr = new Record(HcPagesLang, {
     Page: homePage.id,
@@ -1112,6 +1233,22 @@ migrate(db => {
     Content: contactEnContent.id,
   })
   dao.saveRecord(contactPageEn)
+  const aboutPageFr = new Record(HcPagesLang, {
+    Page: aboutPage.id,
+    Lang: frLang.id,
+    slug: 'a-propos',
+    label: 'A propos de nous',
+    Content: aboutFrContent.id,
+  })
+  dao.saveRecord(aboutPageFr)
+  const aboutPageEn = new Record(HcPagesLang, {
+    Page: aboutPage.id,
+    Lang: enLang.id,
+    slug: 'about-us',
+    label: 'About us!',
+    Content: aboutEnContent.id,
+  })
+  dao.saveRecord(aboutPageEn)
 
   const sql =
     'INSERT INTO `HcLabels` (`key`, `Lang`, `value`) VALUES\n' +

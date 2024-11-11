@@ -3,6 +3,7 @@ version: '3'
 tasks:
   bootstrap:
     cmds:
+      - pnpm i
       - bin/db-bootstrap.sh
       - mv pb/_pb_migrations pb/pb_migrations
       - npm run db &
