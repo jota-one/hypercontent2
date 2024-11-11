@@ -28,9 +28,7 @@ export const useHcLangs = () => {
   }
 
   const langCodes = computed(() => langs.value.map((lang: HcLang) => lang.code))
-  const currentLangCode = computed<HcLangCode>(
-    () => route.path.split('/')[1] as HcLangCode
-  )
+  const currentLangCode = computed(() => route.path.split('/')[1] as HcLangCode)
 
   const currentLang = computed(() => {
     return (

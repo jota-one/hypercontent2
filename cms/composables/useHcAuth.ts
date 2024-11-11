@@ -9,7 +9,7 @@ export const useHcAuth = () => {
   const { $localStorage } = useNuxtApp()
 
   const getToken = () =>
-    $localStorage.getItem(runtimeConfig.hypercontent.jwt.token.name) || ''
+    $localStorage.getItem(runtimeConfig.hypercontent.jwt?.token.name) || ''
 
   const fetchUser = async () => {
     const response = await fetch(
@@ -27,9 +27,9 @@ export const useHcAuth = () => {
 
   const checkAuth = async () => {
     const response = await fetch(
-      `${runtimeConfig.hypercontent.remoteApi}/auth/check`,
+      `${runtimeConfig.hypercontent.remoteApi}/collections/users/auth-refresh`,
       {
-        method: 'HEAD',
+        method: 'POST',
         headers: {
           authorization: `Bearer ${getToken()}`,
         },

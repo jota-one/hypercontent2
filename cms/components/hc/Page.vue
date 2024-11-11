@@ -18,10 +18,6 @@ const accessible = computed(() => {
     return true
   }
 
-  if (isAuthenticated.value && access === userRole.value) {
-    return true
-  }
-
-  return false
+  return isAuthenticated.value && access === userRole.value
 })
 </script>
