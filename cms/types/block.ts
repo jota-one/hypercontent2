@@ -1,5 +1,3 @@
-import type { Block } from '@babel/types'
-
 export interface BaseBlock {
   id?: string
   props: Record<string, unknown>
