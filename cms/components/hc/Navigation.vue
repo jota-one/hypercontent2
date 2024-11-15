@@ -1,7 +1,15 @@
 <script setup lang="ts">
 import type { NavItem } from '@nuxt/content/dist/runtime/types'
 
-const { currentLangCode } = useHcLangs()
+type Props = {
+  prefix?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  prefix: '',
+})
+
+const { currentLangCode } = useHcLangs(props.prefix)
 const navQuery = queryContent({
   where: {
     _path: { $contains: `/${currentLangCode.value}/` },
@@ -9,7 +17,7 @@ const navQuery = queryContent({
 })
 
 const extractNavigation = (navigation: NavItem[]) => {
-  return navigation[0]?.children || []
+  return navigation?.[0]?.children || []
 }
 </script>
 
@@ -22,10 +30,11 @@ const extractNavigation = (navigation: NavItem[]) => {
         class="list-none"
       >
         <NuxtLink
-          :to="link._path"
+          :to="`${prefix}${link._path}`"
           class="text-white no-underline hover:underline"
-          >{{ link.title }}</NuxtLink
         >
+          {{ link.title }}
+        </NuxtLink>
       </li>
     </ul>
   </ContentNavigation>

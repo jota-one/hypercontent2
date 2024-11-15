@@ -85,7 +85,7 @@ const fetchEndpoint = async (path: string, query = '') => {
   return { json, url }
 }
 
-const getFrontMatter = (page: HcPage, apiUrl: string) => {
+const getFrontMatter = (page: HcPage) => {
   let ymlContent = `---\n`
 
   if (page.show !== 'always') {
@@ -96,7 +96,7 @@ const getFrontMatter = (page: HcPage, apiUrl: string) => {
   }
 
   ymlContent += `access: ${page.access || 'all'}\n`
-  ymlContent += `apiUrl: ${apiUrl}\n`
+  ymlContent += `apiUrl: ${resolveEndpointDefPlaceholders(HC_ENDPOINTS.content.page.path, { page })}\n`
   ymlContent += `---\n\n`
 
   return ymlContent
@@ -121,7 +121,7 @@ const isBooleanOrNumber = (value: string) =>
 
 const processBlockProps = (block: HcPageBlock) => {
   const componentProps = []
-  const props = block.data?.props || {}
+  const props = { ...block.props, id: block.id }
   for (const [key, value] of Object.entries(props)) {
     let componentProp = ''
 
@@ -319,7 +319,6 @@ const buildPages = async (
       })
     )
     let content = endpoint.json.items[0].expand.Content
-    const pageApiUrl = endpoint.url
 
     if (page.entity) {
       // Replace entity props in content, e.g. :city.label => lausanne
@@ -352,7 +351,7 @@ const buildPages = async (
       : page.localSortedPath
 
     const mdContent =
-      getFrontMatter(page, pageApiUrl) +
+      getFrontMatter(page) +
       json2mdc(
         content,
         (page.hasDynamicContent && getEntityDefFromPath(page.path)) || undefined
@@ -376,7 +375,6 @@ const generateContent = async ({
   apiBaseUrl,
   contentRootFolder,
   excludeLabelKeyPrefixes,
-  customContentApiEndpoints,
 }: {
   apiBaseUrl: string
   contentRootFolder?: string

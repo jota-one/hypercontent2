@@ -1,6 +1,6 @@
 import type { HcLang, HcLangCode } from '../types/lang'
 
-export const useHcLangs = () => {
+export default function useHcLangs(prefix = '') {
   const langs = useState('hcLangs', () => ref<HcLang[]>([]))
   const defaultLang = useState('hcDefaultLang', () => ref<HcLang | null>(null))
 
@@ -28,7 +28,13 @@ export const useHcLangs = () => {
   }
 
   const langCodes = computed(() => langs.value.map((lang: HcLang) => lang.code))
-  const currentLangCode = computed(() => route.path.split('/')[1] as HcLangCode)
+  const currentLangCode = computed(() => {
+    let routePath = route.path
+    if (prefix && routePath.indexOf(prefix) === 0) {
+      routePath = routePath.slice(prefix.length)
+    }
+    return routePath.split('/')[1] as HcLangCode
+  })
 
   const currentLang = computed(() => {
     return (

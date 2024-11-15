@@ -1,3 +1,5 @@
+import type { ParsedContent } from '@nuxt/content'
+
 import type { HcUserRole } from './user'
 
 export type HcPageShow = 'always' | 'active' | 'never'
@@ -16,15 +18,14 @@ export interface HcPage {
   resolveSlug: string
 }
 
-export interface HcPageBlockData {
-  props?: Record<string, any>
-  text?: string
+export interface HcParsedPage extends ParsedContent {
+  apiUrl: string
 }
 
 export interface HcPageBlock {
   id?: string
   type?: string
-  data: HcPageBlockData
+  props?: Record<string, any>
   children?: HcPageBlock[]
   text?: string
 }

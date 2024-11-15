@@ -1,6 +1,7 @@
 export * from '../HcErrorCode'
 export * as city from './city'
 export * as content from './content'
+export * from './db.d'
 export * as event from './event'
 export * as lang from './lang'
 export * as link from './link'

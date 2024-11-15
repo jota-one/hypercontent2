@@ -920,10 +920,8 @@ migrate(db => {
       {
         id: 'tnAEGFJEcx',
         type: 'BlockTitle',
-        data: {
-          props: {
-            text: 'Accueil',
-          },
+        props: {
+          text: 'Accueil',
         },
       },
     ]),
@@ -944,10 +942,8 @@ migrate(db => {
       {
         id: 'axBTmiGid_',
         type: 'BlockTitle',
-        data: {
-          props: {
-            text: 'Contactez-nous!',
-          },
+        props: {
+          text: 'Contactez-nous!',
         },
       },
       {
@@ -962,38 +958,32 @@ migrate(db => {
       {
         id: 'DiWvCP6i76',
         type: 'AddressBlock',
-        data: {
-          props: {
-            person: {
-              firstName: 'Juniors',
-              lastName: 'Jota',
-              title: 'Chief Architects',
-              street: 'Inifinite Loop π',
-              zip: 9999,
-              city: 'Magic City',
-              phone: '+41 (0) 79 123 45 67',
-              email: 'juniors@jota.one',
-            },
+        props: {
+          person: {
+            firstName: 'Juniors',
+            lastName: 'Jota',
+            title: 'Chief Architects',
+            street: 'Inifinite Loop π',
+            zip: 9999,
+            city: 'Magic City',
+            phone: '+41 (0) 79 123 45 67',
+            email: 'juniors@jota.one',
           },
         },
         children: [
           {
             id: 'lalala',
             type: 'BlockTitle',
-            data: {
-              props: {
-                text: 'Du contenu!!',
-              },
+            props: {
+              text: 'Du contenu!!',
             },
           },
           {
             id: 'lalaolo',
             type: 'BlockImage',
-            data: {
-              props: {
-                src: 'https://images.unsplash.com/photo-1730871082254-65b6e151c82b?q=80&w=400',
-                alt: 'Une belle photo',
-              },
+            props: {
+              src: 'https://images.unsplash.com/photo-1730871082254-65b6e151c82b?q=80&w=400',
+              alt: 'Une belle photo',
             },
             children: [
               {
@@ -1006,19 +996,15 @@ migrate(db => {
       {
         id: 'a83NvChRog',
         type: 'BlockSpace',
-        data: {
-          props: {
-            size: 'half',
-          },
+        props: {
+          size: 'half',
         },
       },
       {
         id: 'LEnB2vS5Kp',
         type: 'BlockTitle',
-        data: {
-          props: {
-            text: 'Qui sommes-nous ?',
-          },
+        props: {
+          text: 'Qui sommes-nous ?',
         },
       },
       {
@@ -1042,19 +1028,15 @@ migrate(db => {
       {
         id: 'nR7cRoncoL',
         type: 'BlockSpace',
-        data: {
-          props: {
-            size: 'half',
-          },
+        props: {
+          size: 'half',
         },
       },
       {
         id: 'mBpixTX7_i',
         type: 'BlockTitle',
-        data: {
-          props: {
-            text: 'Buts',
-          },
+        props: {
+          text: 'Buts',
         },
       },
       {
@@ -1093,19 +1075,15 @@ migrate(db => {
       {
         id: 'apropo423',
         type: 'BlockTitle',
-        data: {
-          props: {
-            text: 'A propos de nous',
-          },
+        props: {
+          text: 'A propos de nous',
         },
       },
       {
         id: 'arow1',
         type: 'Row',
-        data: {
-          props: {
-            columns: 3,
-          },
+        props: {
+          columns: 3,
         },
         children: [
           {
@@ -1115,10 +1093,8 @@ migrate(db => {
               {
                 id: 'titojojo',
                 type: 'BlockTitle',
-                data: {
-                  props: {
-                    text: 'Jorinho',
-                  },
+                props: {
+                  text: 'Jorinho',
                 },
               },
               {
@@ -1133,19 +1109,15 @@ migrate(db => {
               {
                 id: 'a83NvChRog',
                 type: 'BlockSpace',
-                data: {
-                  props: {
-                    size: 'half',
-                  },
+                props: {
+                  size: 'half',
                 },
               },
               {
                 id: 'tatadjoj',
                 type: 'BlockTitle',
-                data: {
-                  props: {
-                    text: 'Tadai',
-                  },
+                props: {
+                  text: 'Tadai',
                 },
               },
               {
@@ -1162,20 +1134,16 @@ migrate(db => {
           {
             id: 'col4243323',
             type: 'Column',
-            data: {
-              props: {
-                span: 2,
-              },
+            props: {
+              span: 2,
             },
             children: [
               {
                 id: 'lalaolo',
                 type: 'BlockImage',
-                data: {
-                  props: {
-                    src: 'https://images.unsplash.com/photo-1730871082254-65b6e151c82b?q=80&w=400',
-                    alt: 'Une belle photo',
-                  },
+                props: {
+                  src: 'https://images.unsplash.com/photo-1730871082254-65b6e151c82b?q=80&w=400',
+                  alt: 'Une belle photo',
                 },
                 children: [
                   {

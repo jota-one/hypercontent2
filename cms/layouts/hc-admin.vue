@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
     <div class="layout admin">
-      Admin layout
+      <h1>Admin Layout</h1>
       <slot />
     </div>
   </ClientOnly>

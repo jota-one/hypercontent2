@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ relative: edit }">
     <img :src="src" :alt="alt" />
     <div><slot /></div>
   </div>
@@ -7,6 +7,8 @@
 
 <script setup lang="ts">
 type Props = {
+  id?: string
+  edit?: boolean
   src: string
   alt: string
 }

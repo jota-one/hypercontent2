@@ -21,6 +21,9 @@ export const HC_ENDPOINTS = {
     },
   },
   content: {
+    page: {
+      path: '/collections/HcPagesLang/records/{page.id}',
+    },
     detail: {
       path: '/collections/HcPagesLang/records?expand=Content&filter=(id = "{page.id}")',
       // queryParams: { lang_id: '{lang.id}', resolve_slug: '{resolvedSlug}' },

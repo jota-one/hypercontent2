@@ -55,3 +55,7 @@ export function resolveEndpointDefPlaceholders(pathOrParams: any, values = {}) {
 
   return pathOrParams
 }
+
+export function isEmpty(obj: object) {
+  return Object.keys(obj).length === 0
+}

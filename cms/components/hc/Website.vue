@@ -14,7 +14,7 @@ const props = defineProps<Props>()
 const route = useRoute()
 const ready = ref(false)
 
-if (route.path === '/' || route.path === '/admin') {
+if (route.path === '/' || route.path === '/admin' || route.path === '/edit') {
   ready.value = true
 } else {
   const { checkAuth } = useHcAuth()
