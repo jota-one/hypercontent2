@@ -1,4 +1,9 @@
 export type ContentApiEndpointDynamicPageResolver = (response: any) => any[]
+export interface BaseConfig {
+  apiBasePath: string[]
+  apiBaseUrl: string
+  contentBasePath: string[]
+}
 
 export interface ContentApiEndpointDef {
   path: string
@@ -9,7 +14,16 @@ export interface ContentApiEndpointDef {
   }
 }
 
+export const baseConfig: BaseConfig = {
+  apiBasePath: ['_hc', 'api'],
+  apiBaseUrl: '',
+  contentBasePath: ['content'],
+}
+
 export const HC_ENDPOINTS = {
+  auth: {
+    login: '/collections/users/auth-with-password',
+  },
   city: {
     list: {
       path: '/cities',
@@ -24,6 +38,7 @@ export const HC_ENDPOINTS = {
     page: {
       path: '/collections/HcPagesLang/records/{page.id}',
     },
+    blocks: '/collections/HcContents/records/{page.contentId}',
     detail: {
       path: '/collections/HcPagesLang/records?expand=Content&filter=(id = "{page.id}")',
       // queryParams: { lang_id: '{lang.id}', resolve_slug: '{resolvedSlug}' },
@@ -56,9 +71,12 @@ export const HC_ENDPOINTS = {
     },
   },
   navigation: {
-    list: {
-      path: '/collections/HcNavigation/records?filter=(langCode="{lang.code}")',
-    },
+    list: '/collections/HcNavigation/records?filter=(langCode="{lang.code}")',
+    byPath: '/collections/HcNavigation/records?filter=(path="{path}")',
+  },
+  role: {
+    list: '/collections/HcRoles/records',
+    one: '/collections/HcRoles/records/{id}',
   },
   teaser: {
     list: {

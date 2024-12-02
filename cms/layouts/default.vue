@@ -17,7 +17,7 @@
     >
       <HcPage>
         <ContentSlot />
-        <template #restricted-access> Restricted </template>
+        <template #restricted-access> Insert login form here... </template>
       </HcPage>
     </main>
     <footer>

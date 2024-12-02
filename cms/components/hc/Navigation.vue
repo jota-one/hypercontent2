@@ -22,20 +22,22 @@ const extractNavigation = (navigation: NavItem[]) => {
 </script>
 
 <template>
-  <ContentNavigation v-slot="{ navigation }" :query="navQuery">
-    <ul class="flex items-center space-x-2">
-      <li
-        v-for="link of extractNavigation(navigation)"
-        :key="link._path"
-        class="list-none"
-      >
-        <NuxtLink
-          :to="`${prefix}${link._path}`"
-          class="text-white no-underline hover:underline"
+  <div>
+    <ContentNavigation v-slot="{ navigation }" :query="navQuery">
+      <ul class="flex items-center space-x-2">
+        <li
+          v-for="link of extractNavigation(navigation)"
+          :key="link._path"
+          class="list-none"
         >
-          {{ link.title }}
-        </NuxtLink>
-      </li>
-    </ul>
-  </ContentNavigation>
+          <NuxtLink
+            :to="`${prefix}${link._path}`"
+            class="text-white no-underline hover:underline"
+          >
+            {{ link.title }}
+          </NuxtLink>
+        </li>
+      </ul>
+    </ContentNavigation>
+  </div>
 </template>

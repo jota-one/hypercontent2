@@ -1,9 +1,13 @@
+import { HC_ENDPOINTS } from '../common/config'
+import { resolveEndpointDefPlaceholders } from '../common/helpers'
+import type { UsersResponse } from '../types'
 import type { HcLangCode } from '../types/lang'
 import type { HcUserRole } from '../types/user'
 
-export const useHcAuth = () => {
+export default function useHcAuth() {
   const isAuthenticated = useState('hcIsAuthenticated', () => false)
   const userRole = useState<HcUserRole | null>('hcUserRole', () => null)
+  const user = useState<UsersResponse | null>('hcUser', () => null)
 
   const runtimeConfig = useRuntimeConfig().public
   const { $localStorage } = useNuxtApp()
@@ -11,18 +15,21 @@ export const useHcAuth = () => {
   const getToken = () =>
     $localStorage.getItem(runtimeConfig.hypercontent.jwt?.token.name) || ''
 
-  const fetchUser = async () => {
+  const fetchRoleById = async (id: string) => {
     const response = await fetch(
-      `${runtimeConfig.hypercontent.remoteApi}/auth/user`,
+      resolveEndpointDefPlaceholders(
+        runtimeConfig.hypercontent.remoteApi + HC_ENDPOINTS.role.one,
+        { id }
+      ),
       {
+        method: 'GET',
         headers: {
           authorization: `Bearer ${getToken()}`,
         },
       }
     )
-
-    const responseBody = await response.json()
-    userRole.value = responseBody.role
+    const role = await response.json()
+    userRole.value = role.name
   }
 
   const checkAuth = async () => {
@@ -37,9 +44,11 @@ export const useHcAuth = () => {
     )
 
     isAuthenticated.value = response.status === 200
+    const responseBody = await response.json()
 
     if (isAuthenticated.value) {
-      await fetchUser()
+      user.value = responseBody.record
+      await fetchRoleById(responseBody.record.Role)
     }
   }
 
@@ -65,12 +74,15 @@ export const useHcAuth = () => {
     }
   }
 
-  const login = async (credentials: { email: string; password: string }) => {
+  const login = async (credentials: { identity: string; password: string }) => {
     const response = await fetch(
-      `${runtimeConfig.hypercontent.remoteApi}/auth/login?static`,
+      runtimeConfig.hypercontent.remoteApi + HC_ENDPOINTS.auth.login,
       {
         method: 'post',
         body: JSON.stringify(credentials),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       }
     )
 
@@ -82,34 +94,23 @@ export const useHcAuth = () => {
         responseBody.token
       )
       isAuthenticated.value = true
-      await fetchUser()
+      user.value = responseBody.record
+      await fetchRoleById(responseBody.record.Role)
     } else {
       throw new Error(responseBody.message)
     }
   }
 
-  const logout = async () => {
-    const response = await fetch(
-      `${runtimeConfig.hypercontent.remoteApi}/auth/logout`,
-      {
-        method: 'POST',
-      }
-    )
-
-    const responseBody = await response.json()
-
-    if (response.status === 200) {
-      $localStorage.removeItem(runtimeConfig.hypercontent.jwt.token.name)
-      isAuthenticated.value = false
-      userRole.value = null
-    } else {
-      throw new Error(responseBody.message)
-    }
+  const logout = () => {
+    $localStorage.removeItem(runtimeConfig.hypercontent.jwt.token.name)
+    isAuthenticated.value = false
+    userRole.value = null
   }
 
   return {
     isAuthenticated,
     userRole,
+    user,
     checkAuth,
     generateResetPasswordLink,
     getToken,

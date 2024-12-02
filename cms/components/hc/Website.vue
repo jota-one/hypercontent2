@@ -20,12 +20,10 @@ if (route.path === '/' || route.path === '/admin' || route.path === '/edit') {
   const { checkAuth } = useHcAuth()
   const { _loadLangs, currentLangCode } = useHcLangs()
   const { _loadLabels } = useHcLabels()
-  // const { _loadNavigation, navigation } = useHcNavigation()
   const { _loadLocale } = useHcLocalDate()
 
   await _loadLangs()
   await _loadLabels()
-  // await _loadNavigation()
 
   for (const loader of props.loaders || []) {
     if (typeof loader === 'function') {
