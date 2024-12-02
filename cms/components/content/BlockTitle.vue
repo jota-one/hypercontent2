@@ -1,10 +1,29 @@
 <template>
-  <h1 v-if="!form">
+  <h1
+    v-if="!form"
+    class="outline-blue-200 group rounded relative"
+    :class="{
+      'group hover:cursor-pointer hover:outline-dashed': edit,
+    }"
+    @click="toFormMode"
+  >
     {{ text }}
-    <span v-if="edit"> <button @click="form = true">[edit]</button></span>
+    <span
+      v-if="edit"
+      class="i-material-symbols-edit hidden group-hover:block text-blue-300 text-2xl mr-2 absolute right-0 top-0"
+    />
   </h1>
-  <h1 v-else>
-    <input v-model="model.text" /> <button @click="save">[save]</button>
+  <h1 v-else class="flex items-center">
+    <input
+      v-model="model.text"
+      class="border flex-1"
+      @keyup.esc="form = false"
+      @keyup.enter="save"
+    />
+    <span
+      class="i-material-symbols-save text-blue-300 text-2xl mx-2 cursor-pointer"
+      @click="save"
+    />
   </h1>
 </template>
 
@@ -26,13 +45,22 @@ const model = ref({
   text: props.text,
 })
 
+const toFormMode = () => {
+  if (!edit.value) {
+    return
+  }
+  form.value = true
+}
+
 const save = async () => {
   const { updateBlock } = useHcApi()
   const { data: page } = await useAsyncData(
     'my-page',
     queryContent(contentRoutePath.value).findOne
   )
-  await updateBlock(page.value, 'BlockTitle', model.value)
+  const updatedContent = await updateBlock(page.value, model.value)
   form.value = false
+
+  // @todo: find a way to notify the main page that a block was updated (to reload it)
 }
 </script>
