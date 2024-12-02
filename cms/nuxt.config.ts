@@ -78,10 +78,4 @@ export default defineNuxtConfig({
       ],
     },
   },
-
-  vite: {
-    optimizeDeps: {
-      include: ['@editorjs/editorjs'],
-    },
-  },
 })

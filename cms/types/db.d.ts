@@ -13,6 +13,7 @@ export enum Collections {
   HcNavigation = 'HcNavigation',
   HcPages = 'HcPages',
   HcPagesLang = 'HcPagesLang',
+  HcRoles = 'HcRoles',
   HcTeasers = 'HcTeasers',
   HcTeasersLang = 'HcTeasersLang',
   HcTeasersTargets = 'HcTeasersTargets',
@@ -75,6 +76,8 @@ export type HcLangsRecord = {
 }
 
 export type HcNavigationRecord<
+  Taccess = unknown,
+  TcontentId = unknown,
   Tlabel = unknown,
   Tlang = unknown,
   TlangCode = unknown,
@@ -85,6 +88,8 @@ export type HcNavigationRecord<
   Tsort = unknown,
   TsortedPath = unknown,
 > = {
+  access?: null | Taccess
+  contentId?: null | TcontentId
   label?: null | Tlabel
   lang?: null | Tlang
   langCode?: null | TlangCode
@@ -103,6 +108,7 @@ export enum HcPagesShowOptions {
 }
 export type HcPagesRecord = {
   Parent?: RecordIdString
+  Role?: RecordIdString
   active?: boolean
   name?: string
   resolveSlug?: boolean
@@ -116,6 +122,10 @@ export type HcPagesLangRecord = {
   Page?: RecordIdString
   label?: string
   slug?: string
+}
+
+export type HcRolesRecord = {
+  name?: string
 }
 
 export type HcTeasersRecord = {
@@ -143,6 +153,7 @@ export type HcTeasersTargetsRecord = {
 }
 
 export type UsersRecord = {
+  Role?: RecordIdString
   avatar?: string
   name?: string
 }
@@ -161,6 +172,8 @@ export type HcLabelsResponse<Texpand = unknown> = Required<HcLabelsRecord> &
 export type HcLangsResponse<Texpand = unknown> = Required<HcLangsRecord> &
   BaseSystemFields<Texpand>
 export type HcNavigationResponse<
+  Taccess = unknown,
+  TcontentId = unknown,
   Tlabel = unknown,
   Tlang = unknown,
   TlangCode = unknown,
@@ -173,6 +186,8 @@ export type HcNavigationResponse<
   Texpand = unknown,
 > = Required<
   HcNavigationRecord<
+    Taccess,
+    TcontentId,
     Tlabel,
     Tlang,
     TlangCode,
@@ -189,6 +204,8 @@ export type HcPagesResponse<Texpand = unknown> = Required<HcPagesRecord> &
   BaseSystemFields<Texpand>
 export type HcPagesLangResponse<Texpand = unknown> =
   Required<HcPagesLangRecord> & BaseSystemFields<Texpand>
+export type HcRolesResponse<Texpand = unknown> = Required<HcRolesRecord> &
+  BaseSystemFields<Texpand>
 export type HcTeasersResponse<Texpand = unknown> = Required<HcTeasersRecord> &
   BaseSystemFields<Texpand>
 export type HcTeasersLangResponse<
@@ -210,6 +227,7 @@ export type CollectionRecords = {
   HcNavigation: HcNavigationRecord
   HcPages: HcPagesRecord
   HcPagesLang: HcPagesLangRecord
+  HcRoles: HcRolesRecord
   HcTeasers: HcTeasersRecord
   HcTeasersLang: HcTeasersLangRecord
   HcTeasersTargets: HcTeasersTargetsRecord
@@ -224,6 +242,7 @@ export type CollectionResponses = {
   HcNavigation: HcNavigationResponse
   HcPages: HcPagesResponse
   HcPagesLang: HcPagesLangResponse
+  HcRoles: HcRolesResponse
   HcTeasers: HcTeasersResponse
   HcTeasersLang: HcTeasersLangResponse
   HcTeasersTargets: HcTeasersTargetsResponse
@@ -241,6 +260,7 @@ export type TypedPocketBase = PocketBase & {
   collection(idOrName: 'HcNavigation'): RecordService<HcNavigationResponse>
   collection(idOrName: 'HcPages'): RecordService<HcPagesResponse>
   collection(idOrName: 'HcPagesLang'): RecordService<HcPagesLangResponse>
+  collection(idOrName: 'HcRoles'): RecordService<HcRolesResponse>
   collection(idOrName: 'HcTeasers'): RecordService<HcTeasersResponse>
   collection(idOrName: 'HcTeasersLang'): RecordService<HcTeasersLangResponse>
   collection(
