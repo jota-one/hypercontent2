@@ -4,9 +4,12 @@ import { join as joinPaths } from 'node:path'
 import { defineNuxtModule } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/schema'
 
-import type { ContentApiEndpointDef } from '../common/config'
+import {
+  baseConfig as config,
+  type ContentApiEndpointDef,
+} from '../common/config'
 import copyFiles from './copy-files'
-import generateContentModule, { config } from './generate-content'
+import generateContentModule from './generate-content'
 import setConfigs from './set-configs'
 
 export interface ModuleOptions {
