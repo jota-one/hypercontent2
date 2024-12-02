@@ -51,6 +51,37 @@ migrate(db => {
       options: {},
     },
     {
+      id: 'zalbifbkfdjf4ph',
+      created: '2024-11-18 15:24:56.609Z',
+      updated: '2024-11-18 15:24:56.609Z',
+      name: 'HcRoles',
+      type: 'base',
+      system: false,
+      schema: [
+        {
+          system: false,
+          id: 'v7fveiln',
+          name: 'name',
+          type: 'text',
+          required: false,
+          presentable: false,
+          unique: false,
+          options: {
+            min: null,
+            max: null,
+            pattern: '',
+          },
+        },
+      ],
+      indexes: [],
+      listRule: '',
+      viewRule: '',
+      createRule: null,
+      updateRule: null,
+      deleteRule: null,
+      options: {},
+    },
+    {
       id: 'br1inx9nr82mah7',
       name: 'HcContents',
       type: 'base',
@@ -114,7 +145,8 @@ migrate(db => {
       listRule: '',
       viewRule: '',
       createRule: null,
-      updateRule: null,
+      updateRule:
+        "@request.auth.Role.name = 'admin' || @request.auth.Role.name = 'superadmin'",
       deleteRule: null,
       options: {},
     },
@@ -336,6 +368,22 @@ migrate(db => {
           presentable: false,
           unique: false,
           options: {},
+        },
+        {
+          system: false,
+          id: 'gxrfdk4q',
+          name: 'Role',
+          type: 'relation',
+          required: false,
+          presentable: false,
+          unique: false,
+          options: {
+            collectionId: 'zalbifbkfdjf4ph',
+            cascadeDelete: false,
+            minSelect: null,
+            maxSelect: 1,
+            displayFields: null,
+          },
         },
       ],
       indexes: [],
@@ -822,6 +870,7 @@ migrate(db => {
           'WITH RECURSIVE Navigation AS (\n' +
           '  SELECT\n' +
           '    pl.id as id,\n' +
+          '    pl.Content as contentId,\n' +
           '    p.id AS pid,\n' +
           '    p.name,\n' +
           '    p.sort,\n' +
@@ -830,15 +879,18 @@ migrate(db => {
           '    pl.Lang,\n' +
           '    pl.label,\n' +
           '    l.code AS langCode,\n' +
+          "    IFNULL(r.name, 'all') AS access,\n" +
           "    ('/' || l.code) AS path,\n" +
           "    ('/' || l.code) AS sortedPath\n" +
           '  FROM HcPages AS p\n' +
           '    JOIN HcPagesLang AS pl ON pl.Page = p.id\n' +
           '    JOIN HcLangs AS l ON l.id = pl.Lang\n' +
+          '    LEFT JOIN HcRoles AS r ON r.id = p.Role\n' +
           "    WHERE p.Parent = '' AND l.active = TRUE\n" +
           '  UNION\n' +
           '  SELECT\n' +
           '    pl.id as id,\n' +
+          '    pl.Content as contentId,\n' +
           '    p.id AS pid,\n' +
           '    p.name,\n' +
           '    p.sort,\n' +
@@ -847,15 +899,17 @@ migrate(db => {
           '    pl.Lang,\n' +
           '    pl.label,\n' +
           '    l.code AS langCode,\n' +
+          "    IFNULL(r.name, 'all') AS access,\n" +
           "    (n.path || '/' || pl.slug) AS path,\n" +
           "    (n.path || '/' || (p.sort + 1) || '.' || pl.slug) AS sortedPath\n" +
           '  FROM HcPages AS p\n' +
           '\tJOIN Navigation AS n ON p.Parent = n.pid\n' +
           '    JOIN HcPagesLang As pl ON pl.Page = p.id\n' +
           '    JOIN HcLangs As l ON l.id = pl.Lang\n' +
+          '    LEFT JOIN HcRoles As r ON r.id = p.Role\n' +
           '   WHERE pl.Lang = n.Lang\n' +
           ')\n' +
-          'SELECT id, name, label, sort, show, resolveSlug, Lang AS lang, langCode, path, sortedPath FROM Navigation ORDER BY lang, path;',
+          'SELECT id, contentId, access, name, label, sort, show, resolveSlug, Lang AS lang, langCode, path, sortedPath FROM Navigation ORDER BY lang, path;',
       },
     },
   ]
@@ -865,11 +919,42 @@ migrate(db => {
     dao.saveCollection(collection)
   }
 
+  // Update system users collection
+  const userCollection = dao.findCollectionByNameOrId('_pb_users_auth_')
+  userCollection.schema.addField(
+    new SchemaField({
+      system: false,
+      id: 'sinah9qa',
+      name: 'Role',
+      type: 'relation',
+      required: false,
+      presentable: false,
+      unique: false,
+      options: {
+        collectionId: 'zalbifbkfdjf4ph',
+        cascadeDelete: false,
+        minSelect: null,
+        maxSelect: 1,
+        displayFields: null,
+      },
+    })
+  )
+
+  dao.saveCollection(userCollection)
+
   // Add some contents
+  const HcRoles = dao.findCollectionByNameOrId('HcRoles')
   const HcPages = dao.findCollectionByNameOrId('HcPages')
   const HcLangs = dao.findCollectionByNameOrId('HcLangs')
   const HcContents = dao.findCollectionByNameOrId('HcContents')
   const HcPagesLang = dao.findCollectionByNameOrId('HcPagesLang')
+
+  const userRole = new Record(HcRoles, { name: 'user' })
+  const adminRole = new Record(HcRoles, { name: 'admin' })
+  const superadminRole = new Record(HcRoles, { name: 'superadmin' })
+  dao.saveRecord(userRole)
+  dao.saveRecord(adminRole)
+  dao.saveRecord(superadminRole)
 
   const homePage = new Record(HcPages, {
     name: 'home',
