@@ -59,3 +59,12 @@ export function resolveEndpointDefPlaceholders(pathOrParams: any, values = {}) {
 export function isEmpty(obj: object) {
   return Object.keys(obj).length === 0
 }
+
+export function omit(obj: Record<string, any>, keys: string[]) {
+  return Object.keys(obj).reduce((acc, key) => {
+    if (keys.includes(key)) {
+      return acc
+    }
+    return { ...acc, [key]: obj[key] }
+  }, {})
+}
