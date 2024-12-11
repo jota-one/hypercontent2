@@ -1,5 +1,3 @@
-import { parseMarkdown } from '@nuxtjs/mdc/runtime'
-
 import type {
   DynamicContentEntityDef,
   HcPageBlock,
@@ -163,6 +161,3 @@ export const getMarkdownContent = (
     )
   )
 }
-
-// first arg to parse() is for id, which is unused
-export const parseMd = (md: string) => parseMarkdown(md)

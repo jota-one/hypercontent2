@@ -16,6 +16,7 @@ const content = ref(await fetchContent(path.value))
 
 <template>
   <NuxtLayout>
-    <MDC :value="content" />
+    <!--    <MDC :value="content" />-->
+    {{ content }}
   </NuxtLayout>
 </template>
