@@ -1,5 +1,6 @@
 import { fetchEndpoint } from '../common/backend'
 import { HC_ENDPOINTS } from '../common/config'
+import { getMarkdownContent } from '../common/content'
 import {
   isEmpty,
   omit,
@@ -72,7 +73,7 @@ export default function useHcApi() {
       page.json.items[0].contentId as string
     )
 
-    return 'yoh'
+    return getMarkdownContent(page.json.items[0], content)
   }
 
   const updateBlock = async <B extends ParentBlock>(
