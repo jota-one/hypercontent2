@@ -11,6 +11,9 @@ dynamic part is supported by a pocketbase database.
 1. Create a normal nuxt app next to the `hypercontent` directory
    using the standard nuxi command.
    `npx nuxi@latest init <project-name>`
+
+   Warning! The hypercontent should be installed, which means you should
+   have at least run `npm install` in it.
 2. Register hypercontent into your project. The hypercontent
    directory should be in the same directory as your project.
    Update your `nuxt.config.ts` to something like the following.
